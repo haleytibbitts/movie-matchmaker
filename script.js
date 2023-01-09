@@ -115,8 +115,13 @@ const movieRecApp = {};
 movieRecApp.url = "https://api.themoviedb.org/3/";
 movieRecApp.apiKey = "460ad8448635789cb7af9acdaa3d45f2";
 
+// Our "question page" object, which we use to update the HTML for each question
+movieRecApp.page = document.querySelector('#question-page');
+
 // Object to populate with user info
-// movieRecApp.recommendation = {
+movieRecApp.recommendation = {
+  genre: [],
+};
 //   genre: userGenre,
 //   lang: userLang,
 //   release: userRelease,
@@ -128,24 +133,79 @@ movieRecApp.apiKey = "460ad8448635789cb7af9acdaa3d45f2";
 // };
 
 // Arrays to store fetched data from api
-movieRecApp.genreList = [];
+// movieRecApp.genreList = [];
 movieRecApp.langList = [];
 movieRecApp.actorList = [];
 movieRecApp.directorList = [];
 
+
+// Function to retrieve genre data from our API
 movieRecApp.getGenreData = () => {
+
+  // Construct the URL to fetch genre data
   const url = new URL(`${movieRecApp.url}genre/movie/list`);
   url.search = new URLSearchParams({
     api_key: movieRecApp.apiKey,
   });
+
+  // Use the constructed URL to fetch a list of genres
   fetch(url)
     .then((response) => {
       return response.json();
     })
     .then((jsonResponse) => {
       // console.log(jsonResponse);
-      movieRecApp.genreList = jsonResponse.genres;
+      // movieRecApp.genreList = jsonResponse.genres;
+
+      // Now construct our genre page using the genre list
+      movieRecApp.genrePage(jsonResponse.genres);
     });
+};
+
+// Function to construct the question page for genre
+movieRecApp.genrePage = (genreList) => {
+  // create a form to put all the elements inside
+  const questionForm = document.createElement('fieldset');
+
+  // create our question elements, starting with a legend/question
+  const questionLegend = document.createElement('legend');
+  questionLegend.innerText = 'What GENRE(S) would you like to be matched with?';
+  questionForm.appendChild(questionLegend);
+  // console.log(questionForm);
+
+  // create each checkbox item
+  genreList.forEach(item => {
+    const questionDiv = document.createElement('div');
+    questionDiv.classList.add('question-item');
+    const questionElem = document.createElement('input');
+    questionElem.type = 'checkbox';
+    questionElem.id = item.name;
+    questionElem.name = item.name;
+    questionElem.value = item.name;
+    const questionLabel = document.createElement('label');
+    questionLabel.innerText = item.name;
+    questionLabel.for = item.name;
+    
+    // put each checkbox item & label into our question div
+    questionDiv.appendChild(questionLabel);
+    questionDiv.appendChild(questionElem);
+
+    // put this div into our fieldset object
+    questionForm.appendChild(questionDiv);
+  });
+
+  // add our question fieldset to the page
+  movieRecApp.page.appendChild(questionForm);
+  
+  // create a button to submit
+  const qButton = document.createElement('button');
+  qButton.innerText = 'Next Question';
+
+  // add the button to the page
+  movieRecApp.page.appendChild(qButton);
+
+  // listen for the click
+  movieRecApp.questionListener('genre');
 };
 
 movieRecApp.getActorData = () => {
@@ -190,12 +250,65 @@ movieRecApp.getDirectorData = () => {
   }
 };
 
+movieRecApp.questionListener = (curPage) => {
+
+  // set up a listener for the click to take us to the next page
+  const elem = document.querySelector('button');
+  elem.addEventListener('click', (e) => {
+    
+    // grab the selected checkboxes
+    const userSelection = document.querySelector('fieldset');
+
+    // determine which question page we're on
+    if (curPage == 'genre') {
+
+      // iterate over the HTMLCollection node list of the user selection
+      for (item of userSelection.elements) {
+        if (item.checked) {
+          movieRecApp.recommendation.genre.push(item.value);
+        }
+      };
+
+      // clear out the current question
+      const page = document.querySelector('#welcome-page');
+      page.innerHTML = '';
+
+      // call the next question page
+      // movieRecApp.getRelease();
+    } else if (curPage == 'release' ) {
+      // update other user selections for other pages...
+    } else if (curPage == 'lang') {
+      // update other user selections for other pages...
+    }
+
+    console.log(movieRecApp.recommendation);
+  });
+}
+
+
+movieRecApp.welcomeListener = () => {
+  
+  // set up a listener for the submit on the MATCH ME button on our landing page
+  const elem = document.querySelector('button');
+  elem.addEventListener('click', (e) => {
+    // grab welcome page section & remove it
+    const welcomePage = document.querySelector('#welcome-page');
+    welcomePage.innerHTML = '';
+
+    // trigger next page load
+    movieRecApp.getGenreData();
+  });
+};
+
 // Init function
 movieRecApp.init = () => {
-  movieRecApp.getGenreData();
-  movieRecApp.getActorData();
-  movieRecApp.getDirectorData();
-  console.log(movieRecApp.directorList);
+
+  movieRecApp.welcomeListener();
+
+  // movieRecApp.getGenreData();
+  // movieRecApp.getActorData();
+  // movieRecApp.getDirectorData();
+  // console.log(movieRecApp.directorList);
 };
 
 // 2. initialize API
