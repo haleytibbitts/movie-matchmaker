@@ -360,7 +360,7 @@ movieRecApp.langPage = () => {
         questionElem.value =
         questionLabel.for =
           "ko";
-      questionLabel.innerText = "korean";
+      questionLabel.innerText = "Korean";
     } else if (i === 8) {
       questionElem.id =
         questionElem.name =
@@ -396,24 +396,6 @@ movieRecApp.langPage = () => {
 
   // listen for the click
   movieRecApp.questionListener("lang");
-};
-
-movieRecApp.getActorData = () => {
-  const url = new URL(`${movieRecApp.url}person/popular`);
-  url.search = new URLSearchParams({
-    api_key: movieRecApp.apiKey,
-  });
-  fetch(url)
-    .then((response) => {
-      return response.json();
-    })
-    .then((jsonResponse) => {
-      jsonResponse.results.forEach((e) => {
-        if (e.known_for_department === "Acting") {
-          movieRecApp.actorList.push(e);
-        }
-      });
-    });
 };
 
 movieRecApp.getDirectorData = () => {
@@ -476,6 +458,20 @@ movieRecApp.questionListener = (curPage) => {
 
       // call the next question page
       movieRecApp.langPage();
+    } else if (curPage === "lang") {
+      // iterate over the HTMLCollection node list of the user selection
+      for (item of userSelection.elements) {
+        if (item.checked) {
+          movieRecApp.recommendation.lang.push(item.value);
+        }
+      }
+
+      // clear out the current question
+      const page = document.querySelector("#page");
+      page.innerHTML = "";
+
+      // call the next question page
+      // movieRecApp.ratingPage();
     }
 
     console.log(movieRecApp.recommendation);
