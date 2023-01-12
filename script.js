@@ -128,6 +128,7 @@ movieRecApp.page = document.querySelector("#page");
 movieRecApp.recommendation = {
   genre: [],
   release: [],
+  lang: [],
 };
 //   genre: userGenre,
 //   lang: userLang,
