@@ -44,19 +44,19 @@
 //   movieList.results = [];
 //   console.log("clicked");
 //   questionForm.children.forEach((genre) => {});
-//   const url = new URL(
-//     "https://api.themoviedb.org/3/discover/movie?api_key=460ad8448635789cb7af9acdaa3d45f2"
-//   );
-// url.search = new URLSearchParams(with_genres: genreSelection);
-//     fetch(url)
-//       .then(function (response) {
-//         return response.json();
-//       })
-//       .then(function (json) {
-//         // console.log(json);
-//         movieList.results = json.results;
-//         movieList.displayMovies();
-//       });
+
+// MOVIES :)
+// const url = new URL(
+//   "https://api.themoviedb.org/3/discover/movie?api_key=460ad8448635789cb7af9acdaa3d45f2"
+// );
+// fetch(url)
+//   .then(function (response) {
+//     return response.json();
+//   })
+//   .then(function (json) {
+//     // console.log(json);
+//     console.log(json.results);
+//   });
 
 //     movieList.displayMovies = () => {
 //       const page = document.querySelector("body");
@@ -116,7 +116,7 @@ movieRecApp.url = "https://api.themoviedb.org/3/";
 movieRecApp.apiKey = "460ad8448635789cb7af9acdaa3d45f2";
 
 // Our "question page" object, which we use to update the HTML for each question
-movieRecApp.page = document.querySelector('#question-page');
+movieRecApp.page = document.querySelector("#page");
 
 // Object to populate with user info
 movieRecApp.recommendation = {
@@ -138,10 +138,8 @@ movieRecApp.langList = [];
 movieRecApp.actorList = [];
 movieRecApp.directorList = [];
 
-
 // Function to retrieve genre data from our API
 movieRecApp.getGenreData = () => {
-
   // Construct the URL to fetch genre data
   const url = new URL(`${movieRecApp.url}genre/movie/list`);
   url.search = new URLSearchParams({
@@ -165,27 +163,27 @@ movieRecApp.getGenreData = () => {
 // Function to construct the question page for genre
 movieRecApp.genrePage = (genreList) => {
   // create a form to put all the elements inside
-  const questionForm = document.createElement('fieldset');
+  const questionForm = document.createElement("fieldset");
 
   // create our question elements, starting with a legend/question
-  const questionLegend = document.createElement('legend');
-  questionLegend.innerText = 'What GENRE(S) would you like to be matched with?';
+  const questionLegend = document.createElement("legend");
+  questionLegend.innerText = "What GENRE(S) would you like to be matched with?";
   questionForm.appendChild(questionLegend);
   // console.log(questionForm);
 
   // create each checkbox item
-  genreList.forEach(item => {
-    const questionDiv = document.createElement('div');
-    questionDiv.classList.add('question-item');
-    const questionElem = document.createElement('input');
-    questionElem.type = 'checkbox';
+  genreList.forEach((item) => {
+    const questionDiv = document.createElement("div");
+    questionDiv.classList.add("question-item");
+    const questionElem = document.createElement("input");
+    questionElem.type = "checkbox";
     questionElem.id = item.name;
     questionElem.name = item.name;
     questionElem.value = item.name;
-    const questionLabel = document.createElement('label');
+    const questionLabel = document.createElement("label");
     questionLabel.innerText = item.name;
     questionLabel.for = item.name;
-    
+
     // put each checkbox item & label into our question div
     questionDiv.appendChild(questionLabel);
     questionDiv.appendChild(questionElem);
@@ -196,16 +194,91 @@ movieRecApp.genrePage = (genreList) => {
 
   // add our question fieldset to the page
   movieRecApp.page.appendChild(questionForm);
-  
+
   // create a button to submit
-  const qButton = document.createElement('button');
-  qButton.innerText = 'Next Question';
+  const qButton = document.createElement("button");
+  qButton.innerText = "Next Question";
 
   // add the button to the page
   movieRecApp.page.appendChild(qButton);
 
   // listen for the click
-  movieRecApp.questionListener('genre');
+  movieRecApp.questionListener("genre");
+};
+
+movieRecApp.releasePage = () => {
+  // create a form to put all the elements inside
+  const questionForm = document.createElement("fieldset");
+
+  // create our question elements, starting with a legend/question
+  const questionLegend = document.createElement("legend");
+  questionLegend.innerText =
+    "When would you like your movie to have been released?";
+  questionForm.appendChild(questionLegend);
+
+  for (let i = 1; i <= 5; i++) {
+    const questionDiv = document.createElement("div");
+    questionDiv.classList.add("question-item");
+    const questionElem = document.createElement("input");
+    const questionLabel = document.createElement("label");
+    questionElem.type = "checkbox";
+
+    // put each checkbox item & label into our question div
+    questionDiv.appendChild(questionLabel);
+    questionDiv.appendChild(questionElem);
+
+    // put this div into our fieldset object
+    questionForm.appendChild(questionDiv);
+
+    if (i === 1) {
+      questionElem.id =
+        questionElem.name =
+        questionElem.value =
+        questionLabel.innerText =
+        questionLabel.for =
+          "Brand New";
+    } else if (i === 2) {
+      questionElem.id =
+        questionElem.name =
+        questionElem.value =
+        questionLabel.innerText =
+        questionLabel.for =
+          "Recent-ish";
+    } else if (i === 3) {
+      questionElem.id =
+        questionElem.name =
+        questionElem.value =
+        questionLabel.innerText =
+        questionLabel.for =
+          "Older, but not Ancient";
+    } else if (i === 4) {
+      questionElem.id =
+        questionElem.name =
+        questionElem.value =
+        questionLabel.innerText =
+        questionLabel.for =
+          "Classic Film (ancient)";
+    } else {
+      questionElem.id =
+        questionElem.name =
+        questionElem.value =
+        questionLabel.innerText =
+        questionLabel.for =
+          "Whenever, man.";
+    }
+  }
+  // add our question fieldset to the page
+  movieRecApp.page.appendChild(questionForm);
+
+  // create a button to submit
+  const qButton = document.createElement("button");
+  qButton.innerText = "Next Question";
+
+  // add the button to the page
+  movieRecApp.page.appendChild(qButton);
+
+  // listen for the click
+  movieRecApp.questionListener("release");
 };
 
 movieRecApp.getActorData = () => {
@@ -251,49 +324,44 @@ movieRecApp.getDirectorData = () => {
 };
 
 movieRecApp.questionListener = (curPage) => {
-
   // set up a listener for the click to take us to the next page
-  const elem = document.querySelector('button');
-  elem.addEventListener('click', (e) => {
-    
+  const elem = document.querySelector("button");
+  elem.addEventListener("click", (e) => {
     // grab the selected checkboxes
-    const userSelection = document.querySelector('fieldset');
+    const userSelection = document.querySelector("fieldset");
 
     // determine which question page we're on
-    if (curPage == 'genre') {
-
+    if (curPage == "genre") {
       // iterate over the HTMLCollection node list of the user selection
       for (item of userSelection.elements) {
         if (item.checked) {
           movieRecApp.recommendation.genre.push(item.value);
         }
-      };
+      }
 
       // clear out the current question
-      const page = document.querySelector('#welcome-page');
-      page.innerHTML = '';
+      const page = document.querySelector("#page");
+      page.innerHTML = "";
 
       // call the next question page
-      // movieRecApp.getRelease();
-    } else if (curPage == 'release' ) {
+      movieRecApp.releasePage();
+    } else if (curPage == "release") {
       // update other user selections for other pages...
-    } else if (curPage == 'lang') {
+    } else if (curPage == "lang") {
       // update other user selections for other pages...
     }
 
     console.log(movieRecApp.recommendation);
   });
-}
-
+};
 
 movieRecApp.welcomeListener = () => {
-  
   // set up a listener for the submit on the MATCH ME button on our landing page
-  const elem = document.querySelector('button');
-  elem.addEventListener('click', (e) => {
+  const elem = document.querySelector("button");
+  elem.addEventListener("click", (e) => {
     // grab welcome page section & remove it
-    const welcomePage = document.querySelector('#welcome-page');
-    welcomePage.innerHTML = '';
+    const welcomePage = document.querySelector("#page");
+    welcomePage.innerHTML = "";
 
     // trigger next page load
     movieRecApp.getGenreData();
@@ -302,7 +370,6 @@ movieRecApp.welcomeListener = () => {
 
 // Init function
 movieRecApp.init = () => {
-
   movieRecApp.welcomeListener();
 
   // movieRecApp.getGenreData();
