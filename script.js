@@ -132,7 +132,6 @@ movieRecApp.recommendation = {
   service: [],
   lead: [],
   lang: [],
-
 };
 //   genre: userGenre,
 //   lang: userLang,
@@ -303,7 +302,6 @@ movieRecApp.langPage = () => {
 
   // create our question elements, starting with a legend/question
   const questionLegend = document.createElement("legend");
-
   questionLegend.innerText =
     "Which language would you like your film to be in?";
   questionForm.appendChild(questionLegend);
@@ -566,7 +564,7 @@ movieRecApp.getActorData = () => {
       });
       movieRecApp.actorPage();
     });
-  movieRecApp.questionListener("lang");
+  movieRecApp.questionListener("lead")
 };
 
 // create and display a page of possible actors to choose from
@@ -693,9 +691,6 @@ movieRecApp.questionListener = (curPage) => {
     } else if (curPage == "lead") {
       //movieRecApp.directorPage();
     }
-
-    console.log(movieRecApp.recommendation);
-  });
 };
 
 movieRecApp.welcomeListener = () => {
