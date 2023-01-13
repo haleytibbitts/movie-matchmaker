@@ -46,17 +46,23 @@
 //   questionForm.children.forEach((genre) => {});
 
 // MOVIES :)
-// const url = new URL(
-//   "https://api.themoviedb.org/3/discover/movie?api_key=460ad8448635789cb7af9acdaa3d45f2"
-// );
-// fetch(url)
-//   .then(function (response) {
-//     return response.json();
-//   })
-//   .then(function (json) {
-//     // console.log(json);
-//     console.log(json.results);
+// const getMovie = () => {
+//   const url = new URL("https://api.themoviedb.org/3/discover/movie");
+//   url.search = new URLSearchParams({
+//     api_key: "460ad8448635789cb7af9acdaa3d45f2",
+//     with_original_language: "hi",
 //   });
+//   fetch(url)
+//     .then(function (response) {
+//       return response.json();
+//     })
+//     .then(function (json) {
+//       // console.log(json);
+//       console.log(json.results);
+//     });
+// };
+
+// getMovie();
 
 //     movieList.displayMovies = () => {
 //       const page = document.querySelector("body");
@@ -121,6 +127,8 @@ movieRecApp.page = document.querySelector("#page");
 // Object to populate with user info
 movieRecApp.recommendation = {
   genre: [],
+  release: [],
+  lang: [],
 };
 //   genre: userGenre,
 //   lang: userLang,
@@ -212,8 +220,7 @@ movieRecApp.releasePage = () => {
 
   // create our question elements, starting with a legend/question
   const questionLegend = document.createElement("legend");
-  questionLegend.innerText =
-    "When would you like your movie to have been released?";
+  questionLegend.innerText = "How old is your ideal film?";
   questionForm.appendChild(questionLegend);
 
   for (let i = 1; i <= 5; i++) {
@@ -234,37 +241,37 @@ movieRecApp.releasePage = () => {
       questionElem.id =
         questionElem.name =
         questionElem.value =
-        questionLabel.innerText =
         questionLabel.for =
-          "Brand New";
+          "new";
+      questionLabel.innerText = "Brand New";
     } else if (i === 2) {
       questionElem.id =
         questionElem.name =
         questionElem.value =
-        questionLabel.innerText =
         questionLabel.for =
-          "Recent-ish";
+          "recent";
+      questionLabel.innerText = "Recent-ish";
     } else if (i === 3) {
       questionElem.id =
         questionElem.name =
         questionElem.value =
-        questionLabel.innerText =
         questionLabel.for =
-          "Older, but not Ancient";
+          "older";
+      questionLabel.innerText = "Older, but not Ancient";
     } else if (i === 4) {
       questionElem.id =
         questionElem.name =
         questionElem.value =
-        questionLabel.innerText =
         questionLabel.for =
-          "Classic Film (ancient)";
+          "classic";
+      questionLabel.innerText = "Classic Film (Ancient)";
     } else {
       questionElem.id =
         questionElem.name =
         questionElem.value =
-        questionLabel.innerText =
         questionLabel.for =
-          "Whenever, man.";
+          "random";
+      questionLabel.innerText = "Whenever, man.";
     }
   }
   // add our question fieldset to the page
@@ -281,22 +288,115 @@ movieRecApp.releasePage = () => {
   movieRecApp.questionListener("release");
 };
 
-movieRecApp.getActorData = () => {
-  const url = new URL(`${movieRecApp.url}person/popular`);
-  url.search = new URLSearchParams({
-    api_key: movieRecApp.apiKey,
-  });
-  fetch(url)
-    .then((response) => {
-      return response.json();
-    })
-    .then((jsonResponse) => {
-      jsonResponse.results.forEach((e) => {
-        if (e.known_for_department === "Acting") {
-          movieRecApp.actorList.push(e);
-        }
-      });
-    });
+// Language question page function
+movieRecApp.langPage = () => {
+  // create a form to put all the elements inside
+  const questionForm = document.createElement("fieldset");
+
+  // create our question elements, starting with a legend/question
+  const questionLegend = document.createElement("legend");
+  questionLegend.innerText =
+    "Which language would you like your film to be in?";
+  questionForm.appendChild(questionLegend);
+
+  for (let i = 1; i <= 10; i++) {
+    const questionDiv = document.createElement("div");
+    questionDiv.classList.add("question-item");
+    const questionElem = document.createElement("input");
+    const questionLabel = document.createElement("label");
+    questionElem.type = "checkbox";
+
+    // put each checkbox item & label into our question div
+    questionDiv.appendChild(questionLabel);
+    questionDiv.appendChild(questionElem);
+
+    // put this div into our fieldset object
+    questionForm.appendChild(questionDiv);
+
+    if (i === 1) {
+      questionElem.id =
+        questionElem.name =
+        questionElem.value =
+        questionLabel.for =
+          "en";
+      questionLabel.innerText = "English";
+    } else if (i === 2) {
+      questionElem.id =
+        questionElem.name =
+        questionElem.value =
+        questionLabel.for =
+          "zh";
+      questionLabel.innerText = "Chinese";
+    } else if (i === 3) {
+      questionElem.id =
+        questionElem.name =
+        questionElem.value =
+        questionLabel.for =
+          "fr";
+      questionLabel.innerText = "French";
+    } else if (i === 4) {
+      questionElem.id =
+        questionElem.name =
+        questionElem.value =
+        questionLabel.for =
+          "ja";
+      questionLabel.innerText = "Japanese";
+    } else if (i === 5) {
+      questionElem.id =
+        questionElem.name =
+        questionElem.value =
+        questionLabel.for =
+          "es";
+      questionLabel.innerText = "Spanish";
+    } else if (i === 6) {
+      questionElem.id =
+        questionElem.name =
+        questionElem.value =
+        questionLabel.for =
+          "de";
+      questionLabel.innerText = "German";
+    } else if (i === 7) {
+      questionElem.id =
+        questionElem.name =
+        questionElem.value =
+        questionLabel.for =
+          "ko";
+      questionLabel.innerText = "Korean";
+    } else if (i === 8) {
+      questionElem.id =
+        questionElem.name =
+        questionElem.value =
+        questionLabel.for =
+          "hi";
+      questionLabel.innerText = "Hindi";
+    } else if (i === 9) {
+      questionElem.id =
+        questionElem.name =
+        questionElem.value =
+        questionLabel.for =
+          "it";
+      questionLabel.innerText = "Italian";
+    } else {
+      questionElem.id =
+        questionElem.name =
+        questionElem.value =
+        questionLabel.for =
+          "random";
+      questionLabel.innerText = "Suprise Me!";
+    }
+  }
+  // add our question fieldset to the page
+  movieRecApp.page.appendChild(questionForm);
+
+  // create a button to submit
+  const qButton = document.createElement("button");
+  qButton.innerText = "Next Question";
+
+  // add the button to the page
+  movieRecApp.page.appendChild(qButton);
+
+  // listen for the click
+  movieRecApp.questionListener("lang");
 };
 
 movieRecApp.getDirectorData = () => {
@@ -345,10 +445,34 @@ movieRecApp.questionListener = (curPage) => {
 
       // call the next question page
       movieRecApp.releasePage();
-    } else if (curPage == "release") {
-      // update other user selections for other pages...
-    } else if (curPage == "lang") {
-      // update other user selections for other pages...
+    } else if (curPage === "release") {
+      // iterate over the HTMLCollection node list of the user selection
+      for (item of userSelection.elements) {
+        if (item.checked) {
+          movieRecApp.recommendation.release.push(item.value);
+        }
+      }
+
+      // clear out the current question
+      const page = document.querySelector("#page");
+      page.innerHTML = "";
+
+      // call the next question page
+      movieRecApp.langPage();
+    } else if (curPage === "lang") {
+      // iterate over the HTMLCollection node list of the user selection
+      for (item of userSelection.elements) {
+        if (item.checked) {
+          movieRecApp.recommendation.lang.push(item.value);
+        }
+      }
+
+      // clear out the current question
+      const page = document.querySelector("#page");
+      page.innerHTML = "";
+
+      // call the next question page
+      // movieRecApp.ratingPage();
     }
 
     console.log(movieRecApp.recommendation);
