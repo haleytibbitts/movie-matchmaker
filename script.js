@@ -445,9 +445,58 @@ movieRecApp.getActorData = () => {
           movieRecApp.actorList.push(e);
         }
       });
+      movieRecApp.actorPage();
     });
 };
 
+// create and display a page of possible actors to choose from
+movieRecApp.actorPage = () => {
+  // create a form to put all the elements inside
+  const questionForm = document.createElement("fieldset");
+
+  // create our question elements, starting with a legend/question
+  const questionLegend = document.createElement("legend");
+  questionLegend.innerText = "What actor(s) would you like to watch?";
+  questionForm.appendChild(questionLegend);
+
+  // create each checkbox item
+  movieRecApp.actorList.forEach((item) => {
+    // create the div
+    const questionDiv = document.createElement("div");
+    questionDiv.classList.add("question-item");
+
+    // create the checkboxes
+    const questionElem = document.createElement("input");
+    questionElem.type = "checkbox";
+    questionElem.id = questionElem.name = item.name;
+    questionElem.value = item.id;
+    const questionLabel = document.createElement("label");
+    questionLabel.innerText = questionLabel.for = item.name;
+
+    // put each checkbox item & label into our question div
+    questionDiv.appendChild(questionLabel);
+    questionDiv.appendChild(questionElem);
+
+    // put this div into our fieldset object
+    questionForm.appendChild(questionDiv);
+  });
+  // add our question fieldset to the page
+  movieRecApp.page.appendChild(questionForm);
+
+  // create a button to submit
+  const qButton = document.createElement("button");
+  qButton.innerText = "Next Question";
+
+  // add the button to the page
+  movieRecApp.page.appendChild(qButton);
+
+  // listen for the click
+  movieRecApp.questionListener("lead");
+}
+
+
+// ********** DIRECTOR QUESTION PAGE **************
+// Function to retrieve director data from our API
 movieRecApp.getDirectorData = () => {
   const url = new URL(`${movieRecApp.url}person/popular`);
   for (let i = 1; i <= 200; i++) {
