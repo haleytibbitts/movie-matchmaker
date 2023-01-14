@@ -178,6 +178,9 @@ movieRecApp.getGenreData = () => {
 
 // Function to construct the question page for genre
 movieRecApp.genrePage = (genreList) => {
+  // add question container class to page
+  movieRecApp.page.classList.add("flex-container");
+
   // create a form to put all the elements inside
   const questionForm = document.createElement("fieldset");
 

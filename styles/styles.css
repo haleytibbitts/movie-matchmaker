@@ -287,6 +287,9 @@ body {
   margin: 0 auto;
   width: 80%;
   max-width: 1080px;
+}
+
+.flex-container {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -294,6 +297,9 @@ body {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .img-container img {
@@ -354,13 +360,12 @@ label {
   color: #04050a;
 }
 
-.ready {
-  -ms-flex-item-align: center;
-      align-self: center;
-}
-
 fieldset {
   border: dotted 2px #dec5ff;
+}
+
+legend {
+  margin: 0 auto;
 }
 
 label {
@@ -397,8 +402,6 @@ button:focus {
   transition: 0.3s;
   border-radius: 20px;
   margin: 15px 0;
-  -ms-flex-item-align: center;
-      align-self: center;
 }
 button:hover,
 button:active:hover,
