@@ -30,10 +30,14 @@ body {
 }
 
 .img-container {
+  display: flex;
+  justify-content: center;
+
   img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 75%;
+    height: 75%;
+    object-fit: contain;
+    object-position: center;
   }
 }
 
@@ -145,6 +149,10 @@ button:focus {
   flex-wrap: wrap;
   justify-content: center;
   margin: 20px;
+}
+
+.movie-info {
+  display: flex;
 }
 
 footer {

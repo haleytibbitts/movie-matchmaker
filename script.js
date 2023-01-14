@@ -884,22 +884,35 @@ movieRecApp.moviePage = () => {
   console.log(movieRecApp.curRecommendation);
 
   // update it with Title / Tag Line / Poster / Cast / Director / Rating / Overview / Streaming Service (or !IN THEATRES NOW!)
-  const movieDiv = document.createElement("div");
 
   const movieTitle = document.createElement("h2");
   movieTitle.innerText = movieRecApp.curRecommendation[curIndex].title;
+
+  const movieDiv = document.createElement("div");
+  movieDiv.classList.add("movie-info");
+
+  // create image container for poster to help with sizing
+  const posterContainer = document.createElement("div");
+  posterContainer.classList.add("img-container");
   const moviePoster = document.createElement("img");
   moviePoster.src = `https://image.tmdb.org/t/p/original${movieRecApp.curRecommendation[curIndex].poster_path}`;
   moviePoster.alt = movieRecApp.curRecommendation[curIndex].title;
+  posterContainer.appendChild(moviePoster);
+
+  // create text container for movie info to sit beside poster
+  const movieText = document.createElement("div");
+  movieText.classList.add("text-container");
   const movieRating = document.createElement("p");
   movieRating.innerText = movieRecApp.curRecommendation[curIndex].vote_average;
   const movieOverview = document.createElement("p");
   movieOverview.innerText = movieRecApp.curRecommendation[curIndex].overview;
 
-  movieDiv.appendChild(movieTitle);
-  movieDiv.appendChild(moviePoster);
-  movieDiv.appendChild(movieRating);
-  movieDiv.appendChild(movieOverview);
+  movieText.appendChild(movieRating);
+  movieText.appendChild(movieOverview);
+
+  movie.appendChild(movieTitle);
+  movieDiv.appendChild(posterContainer);
+  movieDiv.appendChild(movieText);
 
   movie.appendChild(movieDiv);
 
