@@ -1,0 +1,170 @@
+@use "./variables" as *;
+
+html {
+  font-size: 125%;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  background-image: url(../../../assets/cupid-left.svg),
+    url(../../../assets/cupid-right.svg);
+  background-size: 50%, 60%;
+  background-repeat: no-repeat;
+  background-position: -20vw -25vh, 60vw 20vh;
+}
+
+.wrapper {
+  margin: 0 auto;
+  width: 80%;
+  max-width: 1080px;
+  background-color: transparentize($quaternary, 0.2);
+  padding: 20px;
+  border: 5px double $primary;
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.img-container {
+  display: flex;
+  justify-content: center;
+
+  img {
+    width: 75%;
+    height: 75%;
+    object-fit: contain;
+    object-position: center;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+legend {
+  font-family: $display;
+  color: $primary;
+}
+
+h1 {
+  font-size: 1.7rem;
+  line-height: 3.2rem;
+  text-align: center;
+}
+
+h2 {
+  font-size: 3rem;
+  letter-spacing: 1px;
+}
+
+h3,
+legend {
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+}
+
+h4 {
+  font-size: 1.1rem;
+  letter-spacing: 1.1px;
+}
+
+a {
+  text-decoration: none;
+  color: $secondary;
+  &:hover,
+  &:focus {
+    color: $tertiary;
+  }
+}
+
+p,
+h5 {
+  font-size: 0.7rem;
+}
+
+p,
+label {
+  font-family: $sans;
+  line-height: 1.4rem;
+  color: $primary;
+}
+
+fieldset {
+  border: dotted 2px $secondary;
+}
+
+legend {
+  margin: 0 auto;
+}
+
+label {
+  line-height: 1.6rem;
+  letter-spacing: 1px;
+  background-color: $secondary;
+  border: none;
+  padding: 5px 15px;
+  transition: 0.3s;
+  border-radius: 20px;
+  transition: 0.3s;
+}
+
+input[type="checkbox"] {
+  display: none;
+}
+
+input[type="checkbox"]:checked + label {
+  background-color: $tertiary;
+}
+
+button,
+button:active,
+button:focus {
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.6rem;
+  letter-spacing: 1px;
+  background-color: $secondary;
+  border: none;
+  padding: 5px 15px;
+  transition: 0.3s;
+  border-radius: 20px;
+  margin: 15px 0;
+
+  &:hover {
+    background-color: $tertiary;
+    transform: scale(1.1, 1.1);
+  }
+}
+
+.question-item {
+  margin: 10px;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 20px;
+}
+
+.movie-info {
+  display: flex;
+}
+
+footer {
+  background-color: $primary;
+
+  p {
+    color: $quaternary;
+    text-align: center;
+    padding: 5px 0;
+    margin: 0;
+  }
+}
