@@ -122,7 +122,7 @@ const today = new Date();
 const dd = String(today.getDate()).padStart(2, "0");
 const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
 const yyyy = today.getFullYear();
-const curDate = `${yyyy}-${dd}-${mm}`;
+const curDate = `${yyyy}-${mm}-${dd}`;
 
 // Our pre-defined date ranges for release years
 const curYear = "2023-01-01";
@@ -130,6 +130,9 @@ const recentYear = "2020-01-01";
 const oldYear = "2000-01-01";
 const classicYear = "1950-01-01";
 const lowestYear = "1940-01-01";
+
+// set a shortest possible movie runtime for our search
+const shortestRuntime = 60;
 
 // Fetch parameters
 movieRecApp.url = "https://api.themoviedb.org/3/";
@@ -262,33 +265,34 @@ movieRecApp.releasePage = () => {
     if (i === 1) {
       questionElem.id =
         questionElem.name =
-        questionElem.value =
         questionLabel.htmlFor =
           curYear;
+      questionElem.value = [curDate, curYear];
       questionLabel.innerText = "Brand New";
     } else if (i === 2) {
       questionElem.id =
         questionElem.name =
-        questionElem.value =
         questionLabel.htmlFor =
           recentYear;
+      questionElem.value = [curYear, recentYear];
       questionLabel.innerText = "Recent-ish";
     } else if (i === 3) {
       questionElem.id =
         questionElem.name =
-        questionElem.value =
         questionLabel.htmlFor =
           oldYear;
+      questionElem.value = [recentYear, oldYear];
       questionLabel.innerText = "Older, but not Ancient";
     } else if (i === 4) {
       questionElem.id =
         questionElem.name =
-        questionElem.value =
         questionLabel.htmlFor =
           classicYear;
+      questionElem.value = [oldYear, classicYear];
       questionLabel.innerText = "Classic Film (Ancient)";
     }
   }
+
   // add our question fieldset to the page
   movieRecApp.page.appendChild(questionForm);
 
@@ -829,39 +833,39 @@ movieRecApp.questionListener = (curPage) => {
 movieRecApp.getRec = () => {
   // set up recommendation data
   const genreData = movieRecApp.recommendation.genre.join();
-  const langData = movieRecApp.recommendation.lang[0];
   const servicesData = movieRecApp.recommendation.service.join();
   //const actorData = movieRecApp.recommendation.lead.join();
   //const directorData = movieRecApp.recommendation.director.join();
 
-  // we add 10% to our selected runtime to give a reasonable option
-  const runtimeData = movieRecApp.recommendation.runtime.pop() * 1.1;
-
-  // figure out our highest and lowest date values
-  let releaseDateLowest = lowestYear;
-  let releaseDateHighest = curDate;
-  if (movieRecApp.recommendation.release.length > 1) {
-    releaseDateHighest = movieRecApp.recommendation.release.pop();
-    releaseDateLowest = movieRecApp.recommendation.release[0];
-  } else if ((movieRecApp.recommendation.release.length = 1)) {
-    releaseDateLowest = movieRecApp.recommendation.release[0];
+  // select a language at random from our user input
+  let langData = '';
+  if (movieRecApp.recommendation.lang.length > 0) {
+    const randomIndex = Math.floor(Math.random() * movieRecApp.recommendation.lang.length);
+    langData = movieRecApp.recommendation.lang[randomIndex];
   }
 
+  // give a shortest possible runtime; add 10% to our selected runtime to give a reasonable option
+  let runtimeData = shortestRuntime;
+  if (movieRecApp.recommendation.runtime.length > 0) {
+    runtimeData = (movieRecApp.recommendation.runtime.pop() * 1.1);
+  }
+  
+  // figure out our earliest and latest date values
+  let earlyDate = lowestYear;
+  let laterDate = curDate;
+  if (movieRecApp.recommendation.release.length > 0) {
+
+    // choose one of our selected options at random
+    const randomIndex = Math.floor(Math.random() * movieRecApp.recommendation.release.length);
+    const dates = movieRecApp.recommendation.release[randomIndex].split(',');
+    earlyDate = dates[1];
+    laterDate = dates[0];
+  };
+
   // initialize url for fetch
-  const url = new URL(
-    `${movieRecApp.url}discover/movie?with_runtime.lte=${runtimeData}`
-  );
-  // set up search params using our data
-  url.search = new URLSearchParams({
-    api_key: movieRecApp.apiKey,
-    with_genres: genreData,
-    with_original_language: langData,
-    with_watch_providers: servicesData,
-    //with_cast: actorData,
-    //with_crew: directorData,
-  });
-  //url.search.append('release_date.gte', releaseDateLowest);
-  //console.log(url.search);
+  const url = new URL(`${movieRecApp.url}discover/movie?api_key=${movieRecApp.apiKey}&with_genres=${genreData}&with_original_language=${langData}&with_watch_providers=${servicesData}&with_runtime.lte=${runtimeData}&release_date.gte=${earlyDate}&release_date.lte=${laterDate}`);
+
+  console.log(url);
 
   // fetch a recommendation and call recommendation page
   fetch(url)
