@@ -134,6 +134,9 @@ const lowestYear = '1940-01-01';
 // set a shortest possible movie runtime for our search
 const shortestRuntime = 60;
 
+// set our watch region
+const curRegion = 'CA';
+
 // Fetch parameters
 movieRecApp.url = "https://api.themoviedb.org/3/";
 movieRecApp.apiKey = "460ad8448635789cb7af9acdaa3d45f2";
@@ -152,7 +155,7 @@ movieRecApp.recommendation = {
   popularity: [],
   director: [],
 };
-movieRecApp.curRecommendation = {};
+movieRecApp.curRecommendation = [];
 
 // Arrays to store fetched data from api
 // movieRecApp.genreList = [];
@@ -536,7 +539,7 @@ movieRecApp.getServices = () => {
   const url = new URL(`${movieRecApp.url}watch/providers/movie`);
   url.search = new URLSearchParams({
     api_key: movieRecApp.apiKey,
-    watch_region: "CA",
+    watch_region: curRegion,
   });
 
   // Use the constructed URL to fetch a list of genres
@@ -597,142 +600,179 @@ movieRecApp.servicePage = (servicesList) => {
 };
 
 
-// ********** LEAD ACTOR QUESTION PAGE **************
-// Function to retrieve lead actor data from our API
-movieRecApp.getActorData = () => {
-  const url = new URL(`${movieRecApp.url}person/popular`);
-  url.search = new URLSearchParams({
-    api_key: movieRecApp.apiKey,
+// ********** ACTOR/DIRECTOR DATA RETRIEVAL **************
+// Function to retrieve actor/director data from our API
+movieRecApp.getActorDirectorData = () => {
+
+  // iterate through our list of recommendations
+  const URLs = [];
+  movieRecApp.curRecommendation.forEach((item) => {
+
+    // put our movie credit urls into an array
+    const url = new URL(`${movieRecApp.url}movie/${item.id}/credits`);
+    url.search = new URLSearchParams({
+      api_key: movieRecApp.apiKey,
+    });
+    URLs.push(url);
   });
-  fetch(url)
-    .then((response) => {
+
+  // console.log(URLs);
+
+  // force ourselves to wait for a response from all the API calls(!)
+  Promise.all(
+    URLs.map(async (url) => {
+      const response = await fetch(url);
       return response.json();
     })
-    .then((jsonResponse) => {
-      jsonResponse.results.forEach((e) => {
-        if (e.known_for_department === "Acting") {
-          movieRecApp.actorList.push(e);
-        }
-      });
-      movieRecApp.actorPage();
+  ).then((json) => {
+    // console.log(json);
+    json.forEach((item) => {
+
+      // if we have any cast, add the first one to our actor list
+      if (item.cast.length > 0) {
+        // console.log(item.cast);
+        const actor = {
+          name: item.cast[0].name,
+          id: item.cast[0].id,
+        };
+        movieRecApp.actorList.push(actor);
+      }
+
+      // iterate through the crew and add the director to our director list
+      if (item.crew.length > 0) {
+        // console.log(item.crew);
+        item.crew.forEach((e) => {
+          if (e.job == "Director") {
+            const director = {
+              name: e.name,
+              id: e.id
+            };
+            movieRecApp.directorList.push(director);
+          }
+        });
+      }
     });
+
+    // display our movie recommendation
+    movieRecApp.moviePage();
+  });
 };
 
 // create and display a page of possible actors to choose from
-movieRecApp.actorPage = () => {
-  // create a form to put all the elements inside
-  const questionForm = document.createElement("fieldset");
+// movieRecApp.actorPage = () => {
+//   // create a form to put all the elements inside
+//   const questionForm = document.createElement("fieldset");
 
-  // create our question elements, starting with a legend/question
-  const questionLegend = document.createElement("legend");
-  questionLegend.innerText = "What actor(s) would you like to watch?";
-  questionForm.appendChild(questionLegend);
+//   // create our question elements, starting with a legend/question
+//   const questionLegend = document.createElement("legend");
+//   questionLegend.innerText = "What actor(s) would you like to watch?";
+//   questionForm.appendChild(questionLegend);
 
-  // create each checkbox item
-  movieRecApp.actorList.forEach((item) => {
-    // create the div
-    const questionDiv = document.createElement("div");
-    questionDiv.classList.add("question-item");
+//   // create each checkbox item
+//   movieRecApp.actorList.forEach((item) => {
+//     // create the div
+//     const questionDiv = document.createElement("div");
+//     questionDiv.classList.add("question-item");
 
-    // create the checkboxes
-    const questionElem = document.createElement("input");
-    questionElem.type = "checkbox";
-    questionElem.id = questionElem.name = item.name;
-    questionElem.value = item.id;
-    const questionLabel = document.createElement("label");
-    questionLabel.innerText = questionLabel.for = item.name;
+//     // create the checkboxes
+//     const questionElem = document.createElement("input");
+//     questionElem.type = "checkbox";
+//     questionElem.id = questionElem.name = item.name;
+//     questionElem.value = item.id;
+//     const questionLabel = document.createElement("label");
+//     questionLabel.innerText = questionLabel.for = item.name;
 
-    // put each checkbox item & label into our question div
-    questionDiv.appendChild(questionLabel);
-    questionDiv.appendChild(questionElem);
+//     // put each checkbox item & label into our question div
+//     questionDiv.appendChild(questionLabel);
+//     questionDiv.appendChild(questionElem);
 
-    // put this div into our fieldset object
-    questionForm.appendChild(questionDiv);
-  });
-  // add our question fieldset to the page
-  movieRecApp.page.appendChild(questionForm);
+//     // put this div into our fieldset object
+//     questionForm.appendChild(questionDiv);
+//   });
+//   // add our question fieldset to the page
+//   movieRecApp.page.appendChild(questionForm);
 
-  // create a button to submit
-  const qButton = document.createElement("button");
-  qButton.innerText = "Next Question";
+//   // create a button to submit
+//   const qButton = document.createElement("button");
+//   qButton.innerText = "Next Question";
 
-  // add the button to the page
-  movieRecApp.page.appendChild(qButton);
+//   // add the button to the page
+//   movieRecApp.page.appendChild(qButton);
 
-  // listen for the click
-  movieRecApp.questionListener("lead");
-};
+//   // listen for the click
+//   movieRecApp.questionListener("lead");
+// };
 
 
-// ********** DIRECTOR QUESTION PAGE **************
-// Function to retrieve director data from our API
-movieRecApp.getDirectorData = () => {
-  const url = new URL(`${movieRecApp.url}person/popular`);
+// // ********** DIRECTOR QUESTION PAGE **************
+// // Function to retrieve director data from our API
+// movieRecApp.getDirectorData = () => {
+//   const url = new URL(`${movieRecApp.url}person/popular`);
 
-  // We need to iterate over a bunch of pages to ensure we get enough directors
-  for (let i = 1; i <= 75; i++) {
-    url.search = new URLSearchParams({
-      api_key: movieRecApp.apiKey,
-      page: i,
-    });
-    fetch(url)
-      .then((response) => {
-        return response.json();
-      })
-      .then((jsonResponse) => {
-        jsonResponse.results.forEach((e) => {
-          if (e.known_for_department === "Directing") {
-            movieRecApp.directorList.push(e);
-          }
-        });
-      });
-  }
-};
+//   // We need to iterate over a bunch of pages to ensure we get enough directors
+//   for (let i = 1; i <= 75; i++) {
+//     url.search = new URLSearchParams({
+//       api_key: movieRecApp.apiKey,
+//       page: i,
+//     });
+//     fetch(url)
+//       .then((response) => {
+//         return response.json();
+//       })
+//       .then((jsonResponse) => {
+//         jsonResponse.results.forEach((e) => {
+//           if (e.known_for_department === "Directing") {
+//             movieRecApp.directorList.push(e);
+//           }
+//         });
+//       });
+//   }
+// };
 
-// create and display a page of possible directors to choose from
-movieRecApp.directorPage = () => {
-  // create a form to put all the elements inside
-  const questionForm = document.createElement("fieldset");
+// // create and display a page of possible directors to choose from
+// movieRecApp.directorPage = () => {
+//   // create a form to put all the elements inside
+//   const questionForm = document.createElement("fieldset");
 
-  // create our question elements, starting with a legend/question
-  const questionLegend = document.createElement("legend");
-  questionLegend.innerText = "What director(s) would you like to watch?";
-  questionForm.appendChild(questionLegend);
+//   // create our question elements, starting with a legend/question
+//   const questionLegend = document.createElement("legend");
+//   questionLegend.innerText = "What director(s) would you like to watch?";
+//   questionForm.appendChild(questionLegend);
 
-  // create each checkbox item
-  movieRecApp.directorList.forEach((item) => {
-    // create the div
-    const questionDiv = document.createElement("div");
-    questionDiv.classList.add("question-item");
+//   // create each checkbox item
+//   movieRecApp.directorList.forEach((item) => {
+//     // create the div
+//     const questionDiv = document.createElement("div");
+//     questionDiv.classList.add("question-item");
 
-    // create the checkboxes
-    const questionElem = document.createElement("input");
-    questionElem.type = "checkbox";
-    questionElem.id = questionElem.name = item.name;
-    questionElem.value = item.id;
-    const questionLabel = document.createElement("label");
-    questionLabel.innerText = questionLabel.for = item.name;
+//     // create the checkboxes
+//     const questionElem = document.createElement("input");
+//     questionElem.type = "checkbox";
+//     questionElem.id = questionElem.name = item.name;
+//     questionElem.value = item.id;
+//     const questionLabel = document.createElement("label");
+//     questionLabel.innerText = questionLabel.for = item.name;
 
-    // put each checkbox item & label into our question div
-    questionDiv.appendChild(questionLabel);
-    questionDiv.appendChild(questionElem);
+//     // put each checkbox item & label into our question div
+//     questionDiv.appendChild(questionLabel);
+//     questionDiv.appendChild(questionElem);
 
-    // put this div into our fieldset object
-    questionForm.appendChild(questionDiv);
-  });
-  // add our question fieldset to the page
-  movieRecApp.page.appendChild(questionForm);
+//     // put this div into our fieldset object
+//     questionForm.appendChild(questionDiv);
+//   });
+//   // add our question fieldset to the page
+//   movieRecApp.page.appendChild(questionForm);
 
-  // create a button to submit
-  const qButton = document.createElement("button");
-  qButton.innerText = "Find My Match!";
+//   // create a button to submit
+//   const qButton = document.createElement("button");
+//   qButton.innerText = "Find My Match!";
 
-  // add the button to the page
-  movieRecApp.page.appendChild(qButton);
+//   // add the button to the page
+//   movieRecApp.page.appendChild(qButton);
 
-  // listen for the click
-  movieRecApp.questionListener("director");
-};
+//   // listen for the click
+//   movieRecApp.questionListener("director");
+// };
 
 
 // ********** UPDATE OUR PAGE **************
@@ -760,12 +800,8 @@ movieRecApp.questionListener = (curPage) => {
           movieRecApp.recommendation.runtime.push(item.value);
         } else if (curPage == "service") {
           movieRecApp.recommendation.service.push(item.value);
-        } else if (curPage == "lead") {
-          movieRecApp.recommendation.lead.push(item.value);
-        } else if (curPage == "director") {
-          movieRecApp.recommendation.director.push(item.value);
         } else {
-          console.log(movieRecApp.recommendation);
+          // console.log(movieRecApp.recommendation);
         }
       }
     }
@@ -786,10 +822,6 @@ movieRecApp.questionListener = (curPage) => {
     } else if (curPage == "runtime") {
       movieRecApp.getServices();
     } else if (curPage == "service") {
-      movieRecApp.getActorData();
-    } else if (curPage == "lead") {
-      movieRecApp.directorPage();
-    } else if (curPage == "director") {
       movieRecApp.getRec();
     }
   });
@@ -831,9 +863,9 @@ movieRecApp.getRec = () => {
   };
 
   // initialize url for fetch
-  const url = new URL(`${movieRecApp.url}discover/movie?api_key=${movieRecApp.apiKey}&with_genres=${genreData}&with_original_language=${langData}&with_watch_providers=${servicesData}&with_runtime.lte=${runtimeData}&release_date.gte=${earlyDate}&release_date.lte=${laterDate}`);
+  const url = new URL(`${movieRecApp.url}discover/movie?api_key=${movieRecApp.apiKey}&with_genres=${genreData}&with_original_language=${langData}&with_watch_providers=${servicesData}&watch_region=${curRegion}&with_runtime.lte=${runtimeData}&release_date.gte=${earlyDate}&release_date.lte=${laterDate}`);
 
-  console.log(url);
+  // console.log(url);
 
   // fetch a recommendation and call recommendation page
   fetch(url)
@@ -841,19 +873,23 @@ movieRecApp.getRec = () => {
       return response.json();
     }) .then(function(json) {
       movieRecApp.curRecommendation = json.results;
-      movieRecApp.moviePage();
+
+      // with our recommendations, we can now get actor/director data
+      movieRecApp.getActorDirectorData();
     });
 };
 
 
 // ********** RECOMMENDATION PAGE **************
 movieRecApp.moviePage = () => {
+  console.log('actors: ', movieRecApp.actorList);
+  console.log('directors: ', movieRecApp.directorList);
   // use the first element of the result array
   const curIndex = 0;
 
   // grab the DOM page element
   const movie = document.querySelector('#page');
-  console.log(movieRecApp.curRecommendation);
+  //console.log(movieRecApp.curRecommendation);
 
   // update it with Title / Tag Line / Poster / Cast / Director / Rating / Overview / Streaming Service (or !IN THEATRES NOW!)
   const movieDiv = document.createElement('div');
@@ -902,7 +938,7 @@ movieRecApp.welcomeListener = () => {
 // Init function
 movieRecApp.init = () => {
   movieRecApp.welcomeListener();
-  movieRecApp.getDirectorData();
+  // movieRecApp.getDirectorData();
 };
 
 // 2. initialize API
