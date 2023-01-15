@@ -287,6 +287,9 @@ body {
   margin: 0 auto;
   width: 80%;
   max-width: 1080px;
+  background-color: rgba(244, 243, 240, 0.8);
+  padding: 20px;
+  border: 5px double #04050a;
 }
 
 .flex-container {
