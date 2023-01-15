@@ -119,17 +119,17 @@ const movieRecApp = {};
 
 // Get today's date, store it in a const
 const today = new Date();
-const dd = String(today.getDate()).padStart(2, '0');
-const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+const dd = String(today.getDate()).padStart(2, "0");
+const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
 const yyyy = today.getFullYear();
 const curDate = `${yyyy}-${mm}-${dd}`;
 
 // Our pre-defined date ranges for release years
-const curYear = '2023-01-01';
-const recentYear = '2018-01-01';
-const oldYear = '1990-01-01';
-const classicYear = '1950-01-01';
-const lowestYear = '1940-01-01';
+const curYear = "2023-01-01";
+const recentYear = "2020-01-01";
+const oldYear = "2000-01-01";
+const classicYear = "1950-01-01";
+const lowestYear = "1940-01-01";
 
 // set a shortest possible movie runtime for our search
 const shortestRuntime = 60;
@@ -159,11 +159,9 @@ movieRecApp.curRecommendation = {};
 movieRecApp.actorList = [];
 movieRecApp.directorList = [];
 
-
 // ********** GENRE QUESTION PAGE **************
 // Function to retrieve data from our API
 movieRecApp.getGenreData = () => {
-
   // Construct the URL to fetch genre data
   const url = new URL(`${movieRecApp.url}genre/movie/list`);
   url.search = new URLSearchParams({
@@ -183,6 +181,9 @@ movieRecApp.getGenreData = () => {
 
 // Function to construct the question page for genre
 movieRecApp.genrePage = (genreList) => {
+  // add question container class to page
+  movieRecApp.page.classList.add("flex-container");
+
   // create a form to put all the elements inside
   const questionForm = document.createElement("fieldset");
 
@@ -191,6 +192,11 @@ movieRecApp.genrePage = (genreList) => {
   questionLegend.innerText = "What GENRE(S) would you like to be matched with?";
   questionForm.appendChild(questionLegend);
   // console.log(questionForm);
+
+  // Create div to hold all options
+  const optionsDiv = document.createElement("div");
+  optionsDiv.classList.add("options");
+  questionForm.appendChild(optionsDiv);
 
   // create each checkbox item
   genreList.forEach((item) => {
@@ -203,14 +209,14 @@ movieRecApp.genrePage = (genreList) => {
     questionElem.value = item.id;
     const questionLabel = document.createElement("label");
     questionLabel.innerText = item.name;
-    questionLabel.for = item.name;
+    questionLabel.htmlFor = item.name;
 
     // put each checkbox item & label into our question div
-    questionDiv.appendChild(questionLabel);
     questionDiv.appendChild(questionElem);
+    questionDiv.appendChild(questionLabel);
 
     // put this div into our fieldset object
-    questionForm.appendChild(questionDiv);
+    optionsDiv.appendChild(questionDiv);
   });
 
   // add our question fieldset to the page
@@ -227,7 +233,6 @@ movieRecApp.genrePage = (genreList) => {
   movieRecApp.questionListener("genre");
 };
 
-
 // ********** RELEASE QUESTION PAGE **************
 movieRecApp.releasePage = () => {
   // create a form to put all the elements inside
@@ -238,6 +243,11 @@ movieRecApp.releasePage = () => {
   questionLegend.innerText = "How old is your ideal film?";
   questionForm.appendChild(questionLegend);
 
+  // Create div to hold all options
+  const optionsDiv = document.createElement("div");
+  optionsDiv.classList.add("options");
+  questionForm.appendChild(optionsDiv);
+
   for (let i = 1; i <= 4; i++) {
     const questionDiv = document.createElement("div");
     questionDiv.classList.add("question-item");
@@ -246,37 +256,37 @@ movieRecApp.releasePage = () => {
     questionElem.type = "checkbox";
 
     // put each checkbox item & label into our question div
-    questionDiv.appendChild(questionLabel);
     questionDiv.appendChild(questionElem);
+    questionDiv.appendChild(questionLabel);
 
     // put this div into our fieldset object
-    questionForm.appendChild(questionDiv);
+    optionsDiv.appendChild(questionDiv);
 
     if (i === 1) {
       questionElem.id =
         questionElem.name =
-        questionLabel.for =
+        questionLabel.htmlFor =
           curYear;
       questionElem.value = [curDate, curYear];
       questionLabel.innerText = "Brand New";
     } else if (i === 2) {
       questionElem.id =
         questionElem.name =
-        questionLabel.for =
+        questionLabel.htmlFor =
           recentYear;
       questionElem.value = [curYear, recentYear];
       questionLabel.innerText = "Recent-ish";
     } else if (i === 3) {
       questionElem.id =
         questionElem.name =
-        questionLabel.for =
+        questionLabel.htmlFor =
           oldYear;
       questionElem.value = [recentYear, oldYear];
       questionLabel.innerText = "Older, but not Ancient";
     } else if (i === 4) {
       questionElem.id =
         questionElem.name =
-        questionLabel.for =
+        questionLabel.htmlFor =
           classicYear;
       questionElem.value = [oldYear, classicYear];
       questionLabel.innerText = "Classic Film (Ancient)";
@@ -297,7 +307,6 @@ movieRecApp.releasePage = () => {
   movieRecApp.questionListener("release");
 };
 
-
 // ********** LANGUAGE QUESTION PAGE **************
 movieRecApp.langPage = () => {
   // create a form to put all the elements inside
@@ -309,6 +318,11 @@ movieRecApp.langPage = () => {
     "Which language would you like your film to be in?";
   questionForm.appendChild(questionLegend);
 
+  // Create div to hold all options
+  const optionsDiv = document.createElement("div");
+  optionsDiv.classList.add("options");
+  questionForm.appendChild(optionsDiv);
+
   for (let i = 1; i <= 10; i++) {
     const questionDiv = document.createElement("div");
     questionDiv.classList.add("question-item");
@@ -317,80 +331,80 @@ movieRecApp.langPage = () => {
     questionElem.type = "checkbox";
 
     // put each checkbox item & label into our question div
-    questionDiv.appendChild(questionLabel);
     questionDiv.appendChild(questionElem);
+    questionDiv.appendChild(questionLabel);
 
     // put this div into our fieldset object
-    questionForm.appendChild(questionDiv);
+    optionsDiv.appendChild(questionDiv);
 
     if (i === 1) {
       questionElem.id =
         questionElem.name =
         questionElem.value =
-        questionLabel.for =
+        questionLabel.htmlFor =
           "en";
       questionLabel.innerText = "English";
     } else if (i === 2) {
       questionElem.id =
         questionElem.name =
         questionElem.value =
-        questionLabel.for =
+        questionLabel.htmlFor =
           "zh";
       questionLabel.innerText = "Chinese";
     } else if (i === 3) {
       questionElem.id =
         questionElem.name =
         questionElem.value =
-        questionLabel.for =
+        questionLabel.htmlFor =
           "fr";
       questionLabel.innerText = "French";
     } else if (i === 4) {
       questionElem.id =
         questionElem.name =
         questionElem.value =
-        questionLabel.for =
+        questionLabel.htmlFor =
           "ja";
       questionLabel.innerText = "Japanese";
     } else if (i === 5) {
       questionElem.id =
         questionElem.name =
         questionElem.value =
-        questionLabel.for =
+        questionLabel.htmlFor =
           "es";
       questionLabel.innerText = "Spanish";
     } else if (i === 6) {
       questionElem.id =
         questionElem.name =
         questionElem.value =
-        questionLabel.for =
+        questionLabel.htmlFor =
           "de";
       questionLabel.innerText = "German";
     } else if (i === 7) {
       questionElem.id =
         questionElem.name =
         questionElem.value =
-        questionLabel.for =
+        questionLabel.htmlFor =
           "ko";
       questionLabel.innerText = "Korean";
     } else if (i === 8) {
       questionElem.id =
         questionElem.name =
         questionElem.value =
-        questionLabel.for =
+        questionLabel.htmlFor =
           "hi";
       questionLabel.innerText = "Hindi";
     } else if (i === 9) {
       questionElem.id =
         questionElem.name =
         questionElem.value =
-        questionLabel.for =
+        questionLabel.htmlFor =
           "it";
       questionLabel.innerText = "Italian";
     } else {
       questionElem.id =
         questionElem.name =
         questionElem.value =
-        questionLabel.for =
+        questionLabel.htmlFor =
           "random";
       questionLabel.innerText = "Suprise Me!";
     }
@@ -409,7 +423,6 @@ movieRecApp.langPage = () => {
   movieRecApp.questionListener("lang");
 };
 
-
 // ********** POPULARITY QUESTION PAGE **************
 movieRecApp.popularityPage = () => {
   // create a form to put all the elements inside
@@ -421,6 +434,11 @@ movieRecApp.popularityPage = () => {
     "Is popularity important to you when choosing your ideal match?";
   questionForm.appendChild(questionLegend);
 
+  // Create div to hold all options
+  const optionsDiv = document.createElement("div");
+  optionsDiv.classList.add("options");
+  questionForm.appendChild(optionsDiv);
+
   for (let i = 1; i <= 2; i++) {
     const questionDiv = document.createElement("div");
     questionDiv.classList.add("question-item");
@@ -429,18 +447,18 @@ movieRecApp.popularityPage = () => {
     questionElem.type = "checkbox";
 
     // put each checkbox item & label into our question div
-    questionDiv.appendChild(questionLabel);
     questionDiv.appendChild(questionElem);
+    questionDiv.appendChild(questionLabel);
 
     // put this div into our fieldset object
-    questionForm.appendChild(questionDiv);
+    optionsDiv.appendChild(questionDiv);
 
     if (i === 1) {
-      questionElem.id = questionElem.name = questionLabel.for = "popular";
+      questionElem.id = questionElem.name = questionLabel.htmlFor = "popular";
       questionLabel.innerText = "Yes! I want what everyone else wants!";
       questionLabel.value = "2000";
     } else {
-      questionElem.id = questionElem.name = questionLabel.for = "unpopular";
+      questionElem.id = questionElem.name = questionLabel.htmlFor = "unpopular";
       questionLabel.innerText = "Nope! Give me an unsung hero!";
       questionLabel.value = "";
     }
@@ -459,7 +477,6 @@ movieRecApp.popularityPage = () => {
   movieRecApp.questionListener("popularity");
 };
 
-
 // ********** RUNTIME QUESTION PAGE **************
 movieRecApp.runtimePage = () => {
   // create a form
@@ -470,6 +487,11 @@ movieRecApp.runtimePage = () => {
   questionLegend.innerText = "How long a movie do you want to watch?";
   questionForm.appendChild(questionLegend);
 
+  // Create div to hold all options
+  const optionsDiv = document.createElement("div");
+  optionsDiv.classList.add("options");
+  questionForm.appendChild(optionsDiv);
+
   for (let i = 1; i <= 4; i++) {
     const questionDiv = document.createElement("div");
     questionDiv.classList.add("question-item");
@@ -478,38 +500,38 @@ movieRecApp.runtimePage = () => {
     questionElem.type = "checkbox";
 
     // put each checkbox item & label into our question div
-    questionDiv.appendChild(questionLabel);
     questionDiv.appendChild(questionElem);
+    questionDiv.appendChild(questionLabel);
 
     // put this div into our fieldset object
-    questionForm.appendChild(questionDiv);
+    optionsDiv.appendChild(questionDiv);
 
     if (i === 1) {
       questionElem.id =
         questionElem.name =
         questionLabel.innerText =
-        questionLabel.for =
+        questionLabel.htmlFor =
           "Like, an hour";
       questionElem.value = 60;
     } else if (i === 2) {
       questionElem.id =
         questionElem.name =
         questionLabel.innerText =
-        questionLabel.for =
+        questionLabel.htmlFor =
           "60 to 90 minutes";
       questionElem.value = 90;
     } else if (i === 3) {
       questionElem.id =
         questionElem.name =
         questionLabel.innerText =
-        questionLabel.for =
+        questionLabel.htmlFor =
           "90 to 120 minutes";
       questionElem.value = 120;
     } else {
       questionElem.id =
         questionElem.name =
         questionLabel.innerText =
-        questionLabel.for =
+        questionLabel.htmlFor =
           "Let's spend the night together!";
       questionElem.value = 360;
     }
@@ -527,7 +549,6 @@ movieRecApp.runtimePage = () => {
   // listen for the click
   movieRecApp.questionListener("runtime");
 };
-
 
 // ********** SERVICE QUESTION PAGE **************
 // Function to retrieve service provider data from our API
@@ -562,6 +583,11 @@ movieRecApp.servicePage = (servicesList) => {
   questionForm.appendChild(questionLegend);
   // console.log(questionForm);
 
+  // Create div to hold all options
+  const optionsDiv = document.createElement("div");
+  optionsDiv.classList.add("options");
+  questionForm.appendChild(optionsDiv);
+
   // create each checkbox item
   servicesList.forEach((item) => {
     if (item.display_priority <= 10) {
@@ -572,14 +598,14 @@ movieRecApp.servicePage = (servicesList) => {
       questionElem.id = questionElem.name = item.provider_name;
       questionElem.value = item.provider_id;
       const questionLabel = document.createElement("label");
-      questionLabel.innerText = questionLabel.for = item.provider_name;
+      questionLabel.innerText = questionLabel.htmlFor = item.provider_name;
 
       // put each checkbox item & label into our question div
-      questionDiv.appendChild(questionLabel);
       questionDiv.appendChild(questionElem);
+      questionDiv.appendChild(questionLabel);
 
       // put this div into our fieldset object
-      questionForm.appendChild(questionDiv);
+      optionsDiv.appendChild(questionDiv);
     }
   });
   // add our question fieldset to the page
@@ -595,7 +621,6 @@ movieRecApp.servicePage = (servicesList) => {
   // listen for the click
   movieRecApp.questionListener("service");
 };
-
 
 // ********** LEAD ACTOR QUESTION PAGE **************
 // Function to retrieve lead actor data from our API
@@ -628,6 +653,11 @@ movieRecApp.actorPage = () => {
   questionLegend.innerText = "What actor(s) would you like to watch?";
   questionForm.appendChild(questionLegend);
 
+  // Create div to hold all options
+  const optionsDiv = document.createElement("div");
+  optionsDiv.classList.add("options");
+  questionForm.appendChild(optionsDiv);
+
   // create each checkbox item
   movieRecApp.actorList.forEach((item) => {
     // create the div
@@ -640,14 +670,14 @@ movieRecApp.actorPage = () => {
     questionElem.id = questionElem.name = item.name;
     questionElem.value = item.id;
     const questionLabel = document.createElement("label");
-    questionLabel.innerText = questionLabel.for = item.name;
+    questionLabel.innerText = questionLabel.htmlFor = item.name;
 
     // put each checkbox item & label into our question div
-    questionDiv.appendChild(questionLabel);
     questionDiv.appendChild(questionElem);
+    questionDiv.appendChild(questionLabel);
 
     // put this div into our fieldset object
-    questionForm.appendChild(questionDiv);
+    optionsDiv.appendChild(questionDiv);
   });
   // add our question fieldset to the page
   movieRecApp.page.appendChild(questionForm);
@@ -662,7 +692,6 @@ movieRecApp.actorPage = () => {
   // listen for the click
   movieRecApp.questionListener("lead");
 };
-
 
 // ********** DIRECTOR QUESTION PAGE **************
 // Function to retrieve director data from our API
@@ -699,6 +728,11 @@ movieRecApp.directorPage = () => {
   questionLegend.innerText = "What director(s) would you like to watch?";
   questionForm.appendChild(questionLegend);
 
+  // Create div to hold all options
+  const optionsDiv = document.createElement("div");
+  optionsDiv.classList.add("options");
+  questionForm.appendChild(optionsDiv);
+
   // create each checkbox item
   movieRecApp.directorList.forEach((item) => {
     // create the div
@@ -711,14 +745,14 @@ movieRecApp.directorPage = () => {
     questionElem.id = questionElem.name = item.name;
     questionElem.value = item.id;
     const questionLabel = document.createElement("label");
-    questionLabel.innerText = questionLabel.for = item.name;
+    questionLabel.innerText = questionLabel.htmlFor = item.name;
 
     // put each checkbox item & label into our question div
-    questionDiv.appendChild(questionLabel);
     questionDiv.appendChild(questionElem);
+    questionDiv.appendChild(questionLabel);
 
     // put this div into our fieldset object
-    questionForm.appendChild(questionDiv);
+    optionsDiv.appendChild(questionDiv);
   });
   // add our question fieldset to the page
   movieRecApp.page.appendChild(questionForm);
@@ -733,7 +767,6 @@ movieRecApp.directorPage = () => {
   // listen for the click
   movieRecApp.questionListener("director");
 };
-
 
 // ********** UPDATE OUR PAGE **************
 // Listen for the click on "Next Question", update our recommendation data, and then call the next question
@@ -754,8 +787,8 @@ movieRecApp.questionListener = (curPage) => {
           movieRecApp.recommendation.release.push(item.value);
         } else if (curPage == "lang") {
           movieRecApp.recommendation.lang.push(item.value);
-        // } else if (curPage == "popularity") {
-        //   movieRecApp.recommendation.popularity.push(item.value);
+          // } else if (curPage == "popularity") {
+          //   movieRecApp.recommendation.popularity.push(item.value);
         } else if (curPage == "runtime") {
           movieRecApp.recommendation.runtime.push(item.value);
         } else if (curPage == "service") {
@@ -780,8 +813,8 @@ movieRecApp.questionListener = (curPage) => {
     } else if (curPage == "release") {
       movieRecApp.langPage();
     } else if (curPage == "lang") {
-    //   movieRecApp.popularityPage();
-    // } else if (curPage == "popularity") {
+      //   movieRecApp.popularityPage();
+      // } else if (curPage == "popularity") {
       movieRecApp.runtimePage();
     } else if (curPage == "runtime") {
       movieRecApp.getServices();
@@ -794,7 +827,6 @@ movieRecApp.questionListener = (curPage) => {
     }
   });
 };
-
 
 // ********** RECOMMENDATION DATA FETCH **************
 // Get Recommmendation from our API using our recommendation data
@@ -837,14 +869,14 @@ movieRecApp.getRec = () => {
 
   // fetch a recommendation and call recommendation page
   fetch(url)
-    .then(function(response) {
+    .then(function (response) {
       return response.json();
-    }) .then(function(json) {
+    })
+    .then(function (json) {
       movieRecApp.curRecommendation = json.results;
       movieRecApp.moviePage();
     });
 };
-
 
 // ********** RECOMMENDATION PAGE **************
 movieRecApp.moviePage = () => {
@@ -852,26 +884,39 @@ movieRecApp.moviePage = () => {
   const curIndex = 0;
 
   // grab the DOM page element
-  const movie = document.querySelector('#page');
+  const movie = document.querySelector("#page");
   console.log(movieRecApp.curRecommendation);
 
   // update it with Title / Tag Line / Poster / Cast / Director / Rating / Overview / Streaming Service (or !IN THEATRES NOW!)
-  const movieDiv = document.createElement('div');
 
-  const movieTitle = document.createElement('h2');
+  const movieTitle = document.createElement("h2");
   movieTitle.innerText = movieRecApp.curRecommendation[curIndex].title;
-  const moviePoster = document.createElement('img');
+
+  const movieDiv = document.createElement("div");
+  movieDiv.classList.add("movie-info");
+
+  // create image container for poster to help with sizing
+  const posterContainer = document.createElement("div");
+  posterContainer.classList.add("img-container");
+  const moviePoster = document.createElement("img");
   moviePoster.src = `https://image.tmdb.org/t/p/original${movieRecApp.curRecommendation[curIndex].poster_path}`;
   moviePoster.alt = movieRecApp.curRecommendation[curIndex].title;
-  const movieRating = document.createElement('p');
+  posterContainer.appendChild(moviePoster);
+
+  // create text container for movie info to sit beside poster
+  const movieText = document.createElement("div");
+  movieText.classList.add("text-container");
+  const movieRating = document.createElement("p");
   movieRating.innerText = movieRecApp.curRecommendation[curIndex].vote_average;
-  const movieOverview = document.createElement('p');
+  const movieOverview = document.createElement("p");
   movieOverview.innerText = movieRecApp.curRecommendation[curIndex].overview;
 
-  movieDiv.appendChild(movieTitle);
-  movieDiv.appendChild(moviePoster);
-  movieDiv.appendChild(movieRating);
-  movieDiv.appendChild(movieOverview);
+  movieText.appendChild(movieRating);
+  movieText.appendChild(movieOverview);
+
+  movie.appendChild(movieTitle);
+  movieDiv.appendChild(posterContainer);
+  movieDiv.appendChild(movieText);
 
   movie.appendChild(movieDiv);
 
@@ -881,9 +926,7 @@ movieRecApp.moviePage = () => {
   // movieCast.innerText = movieRecApp.curRecommendation[curIndex].
   // const movieCrew = document.createElement('p');
   // const movieServices = document.createElement('p');
-  
 };
-
 
 // Listener for intro page, when we click, we create the first question
 movieRecApp.welcomeListener = () => {
