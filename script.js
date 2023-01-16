@@ -135,7 +135,7 @@ const lowestYear = "1940-01-01";
 const shortestRuntime = 60;
 
 // set our watch region
-const curRegion = 'CA';
+const curRegion = "CA";
 
 // Fetch parameters
 movieRecApp.url = "https://api.themoviedb.org/3/";
@@ -158,7 +158,7 @@ movieRecApp.recommendation = {
 movieRecApp.curRecommendation = [];
 
 // Arrays to store fetched data from api
-// movieRecApp.genreList = [];
+movieRecApp.genreList = [];
 movieRecApp.actorList = [];
 movieRecApp.directorList = [];
 
@@ -177,13 +177,13 @@ movieRecApp.getGenreData = () => {
       return response.json();
     })
     .then((jsonResponse) => {
-      // Now construct our genre page using the genre list
-      movieRecApp.genrePage(jsonResponse.genres);
+      movieRecApp.genreList = jsonResponse.genres;
+      movieRecApp.genrePage();
     });
 };
 
 // Function to construct the question page for genre
-movieRecApp.genrePage = (genreList) => {
+movieRecApp.genrePage = () => {
   // add question container class to page
   movieRecApp.page.classList.add("flex-container");
 
@@ -192,7 +192,7 @@ movieRecApp.genrePage = (genreList) => {
 
   // create our question elements, starting with a legend/question
   const questionLegend = document.createElement("legend");
-  questionLegend.innerText = "What GENRE(S) would you like to be matched with?";
+  questionLegend.innerText = "What Genre(s) would you like to be matched with?";
   questionForm.appendChild(questionLegend);
   // console.log(questionForm);
 
@@ -202,7 +202,7 @@ movieRecApp.genrePage = (genreList) => {
   questionForm.appendChild(optionsDiv);
 
   // create each checkbox item
-  genreList.forEach((item) => {
+  movieRecApp.genreList.forEach((item) => {
     const questionDiv = document.createElement("div");
     questionDiv.classList.add("question-item");
     const questionElem = document.createElement("input");
@@ -228,9 +228,16 @@ movieRecApp.genrePage = (genreList) => {
   // create a button to submit
   const qButton = document.createElement("button");
   qButton.innerText = "Next Question";
+  const skipButton = document.createElement("button");
+  skipButton.innerText = "Skip";
+  const buttonDiv = document.createElement("div");
+  qButton.classList.add("question-item");
+  skipButton.classList.add("question-item");
 
   // add the button to the page
-  movieRecApp.page.appendChild(qButton);
+  buttonDiv.appendChild(qButton);
+  buttonDiv.appendChild(skipButton);
+  movieRecApp.page.appendChild(buttonDiv);
 
   // listen for the click
   movieRecApp.questionListener("genre");
@@ -266,31 +273,19 @@ movieRecApp.releasePage = () => {
     optionsDiv.appendChild(questionDiv);
 
     if (i === 1) {
-      questionElem.id =
-        questionElem.name =
-        questionLabel.htmlFor =
-          curYear;
+      questionElem.id = questionElem.name = questionLabel.htmlFor = curYear;
       questionElem.value = [curDate, curYear];
       questionLabel.innerText = "Brand New";
     } else if (i === 2) {
-      questionElem.id =
-        questionElem.name =
-        questionLabel.htmlFor =
-          recentYear;
+      questionElem.id = questionElem.name = questionLabel.htmlFor = recentYear;
       questionElem.value = [curYear, recentYear];
       questionLabel.innerText = "Recent-ish";
     } else if (i === 3) {
-      questionElem.id =
-        questionElem.name =
-        questionLabel.htmlFor =
-          oldYear;
+      questionElem.id = questionElem.name = questionLabel.htmlFor = oldYear;
       questionElem.value = [recentYear, oldYear];
       questionLabel.innerText = "Older, but not Ancient";
     } else if (i === 4) {
-      questionElem.id =
-        questionElem.name =
-        questionLabel.htmlFor =
-          classicYear;
+      questionElem.id = questionElem.name = questionLabel.htmlFor = classicYear;
       questionElem.value = [oldYear, classicYear];
       questionLabel.innerText = "Classic Film (Ancient)";
     }
@@ -302,9 +297,16 @@ movieRecApp.releasePage = () => {
   // create a button to submit
   const qButton = document.createElement("button");
   qButton.innerText = "Next Question";
+  const skipButton = document.createElement("button");
+  skipButton.innerText = "Skip";
+  const buttonDiv = document.createElement("div");
+  qButton.classList.add("question-item");
+  skipButton.classList.add("question-item");
 
   // add the button to the page
-  movieRecApp.page.appendChild(qButton);
+  buttonDiv.appendChild(qButton);
+  buttonDiv.appendChild(skipButton);
+  movieRecApp.page.appendChild(buttonDiv);
 
   // listen for the click
   movieRecApp.questionListener("release");
@@ -418,9 +420,16 @@ movieRecApp.langPage = () => {
   // create a button to submit
   const qButton = document.createElement("button");
   qButton.innerText = "Next Question";
+  const skipButton = document.createElement("button");
+  skipButton.innerText = "Skip";
+  const buttonDiv = document.createElement("div");
+  qButton.classList.add("question-item");
+  skipButton.classList.add("question-item");
 
   // add the button to the page
-  movieRecApp.page.appendChild(qButton);
+  buttonDiv.appendChild(qButton);
+  buttonDiv.appendChild(skipButton);
+  movieRecApp.page.appendChild(buttonDiv);
 
   // listen for the click
   movieRecApp.questionListener("lang");
@@ -545,9 +554,16 @@ movieRecApp.runtimePage = () => {
   // create a button to submit
   const qButton = document.createElement("button");
   qButton.innerText = "Next Question";
+  const skipButton = document.createElement("button");
+  skipButton.innerText = "Skip";
+  const buttonDiv = document.createElement("div");
+  qButton.classList.add("question-item");
+  skipButton.classList.add("question-item");
 
   // add the button to the page
-  movieRecApp.page.appendChild(qButton);
+  buttonDiv.appendChild(qButton);
+  buttonDiv.appendChild(skipButton);
+  movieRecApp.page.appendChild(buttonDiv);
 
   // listen for the click
   movieRecApp.questionListener("runtime");
@@ -616,24 +632,24 @@ movieRecApp.servicePage = (servicesList) => {
 
   // create a button to submit
   const qButton = document.createElement("button");
-  qButton.innerText = "Next Question";
+  qButton.innerText = "MATCH ME ❤";
+  const buttonDiv = document.createElement("div");
+  qButton.classList.add("question-item");
 
   // add the button to the page
-  movieRecApp.page.appendChild(qButton);
+  buttonDiv.appendChild(qButton);
+  movieRecApp.page.appendChild(buttonDiv);
 
   // listen for the click
   movieRecApp.questionListener("service");
 };
 
-
 // ********** ACTOR/DIRECTOR DATA RETRIEVAL **************
 // Function to retrieve actor/director data from our API
 movieRecApp.getActorDirectorData = () => {
-
   // iterate through our list of recommendations
   const URLs = [];
   movieRecApp.curRecommendation.forEach((item) => {
-
     // put our movie credit urls into an array
     const url = new URL(`${movieRecApp.url}movie/${item.id}/credits`);
     url.search = new URLSearchParams({
@@ -653,7 +669,6 @@ movieRecApp.getActorDirectorData = () => {
   ).then((json) => {
     // console.log(json);
     json.forEach((item) => {
-
       // if we have any cast, add the first one to our actor list
       if (item.cast.length > 0) {
         // console.log(item.cast);
@@ -671,7 +686,7 @@ movieRecApp.getActorDirectorData = () => {
           if (e.job == "Director") {
             const director = {
               name: e.name,
-              id: e.id
+              id: e.id,
             };
             movieRecApp.directorList.push(director);
           }
@@ -728,7 +743,6 @@ movieRecApp.getActorDirectorData = () => {
 //   // listen for the click
 //   movieRecApp.questionListener("lead");
 // };
-
 
 // // ********** DIRECTOR QUESTION PAGE **************
 // // Function to retrieve director data from our API
@@ -804,51 +818,56 @@ movieRecApp.getActorDirectorData = () => {
 // Listen for the click on "Next Question", update our recommendation data, and then call the next question
 movieRecApp.questionListener = (curPage) => {
   // set up a listener for the click to take us to the next page
-  const elem = document.querySelector("button");
-  elem.addEventListener("click", (e) => {
-    // grab the selected checkboxes
-    const userSelection = document.querySelector("fieldset");
+  const buttons = document.querySelectorAll("button");
+  buttons.forEach((elem) => {
+    elem.addEventListener("click", (e) => {
+      // grab the selected checkboxes
+      const userSelection = document.querySelector("fieldset");
 
-    // iterate over the HTMLCollection node list of the user selection
-    for (item of userSelection.elements) {
-      if (item.checked) {
-        // push the item.value to the proper part of the recommendation data
-        if (curPage == "genre") {
-          movieRecApp.recommendation.genre.push(item.value);
-        } else if (curPage == "release") {
-          movieRecApp.recommendation.release.push(item.value);
-        } else if (curPage == "lang") {
-          movieRecApp.recommendation.lang.push(item.value);
-          // } else if (curPage == "popularity") {
-          //   movieRecApp.recommendation.popularity.push(item.value);
-        } else if (curPage == "runtime") {
-          movieRecApp.recommendation.runtime.push(item.value);
-        } else if (curPage == "service") {
-          movieRecApp.recommendation.service.push(item.value);
-        } else {
-          // console.log(movieRecApp.recommendation);
+      // write statement to decipher which button is being selected and what to do with each
+      if (elem.innerText != "Skip") {
+        // iterate over the HTMLCollection node list of the user selection
+        for (item of userSelection.elements) {
+          if (item.checked) {
+            // push the item.value to the proper part of the recommendation data
+            if (curPage == "genre") {
+              movieRecApp.recommendation.genre.push(item.value);
+            } else if (curPage == "release") {
+              movieRecApp.recommendation.release.push(item.value);
+            } else if (curPage == "lang") {
+              movieRecApp.recommendation.lang.push(item.value);
+              // } else if (curPage == "popularity") {
+              //   movieRecApp.recommendation.popularity.push(item.value);
+            } else if (curPage == "runtime") {
+              movieRecApp.recommendation.runtime.push(item.value);
+            } else if (curPage == "service") {
+              movieRecApp.recommendation.service.push(item.value);
+            } else {
+              // console.log(movieRecApp.recommendation);
+            }
+          }
         }
       }
-    }
 
-    // clear out the current question
-    const page = document.querySelector("#page");
-    page.innerHTML = "";
+      // clear out the current question
+      const page = document.querySelector("#page");
+      page.innerHTML = "";
 
-    // call the next question page
-    if (curPage == "genre") {
-      movieRecApp.releasePage();
-    } else if (curPage == "release") {
-      movieRecApp.langPage();
-    } else if (curPage == "lang") {
-      //   movieRecApp.popularityPage();
-      // } else if (curPage == "popularity") {
-      movieRecApp.runtimePage();
-    } else if (curPage == "runtime") {
-      movieRecApp.getServices();
-    } else if (curPage == "service") {
-      movieRecApp.getRec();
-    }
+      // call the next question page
+      if (curPage == "genre") {
+        movieRecApp.releasePage();
+      } else if (curPage == "release") {
+        movieRecApp.langPage();
+      } else if (curPage == "lang") {
+        //   movieRecApp.popularityPage();
+        // } else if (curPage == "popularity") {
+        movieRecApp.runtimePage();
+      } else if (curPage == "runtime") {
+        movieRecApp.getServices();
+      } else if (curPage == "service") {
+        movieRecApp.getRec();
+      }
+    });
   });
 };
 
@@ -862,34 +881,39 @@ movieRecApp.getRec = () => {
   //const directorData = movieRecApp.recommendation.director.join();
 
   // select a language at random from our user input
-  let langData = '';
+  let langData = "";
   if (movieRecApp.recommendation.lang.length > 0) {
-    const randomIndex = Math.floor(Math.random() * movieRecApp.recommendation.lang.length);
+    const randomIndex = Math.floor(
+      Math.random() * movieRecApp.recommendation.lang.length
+    );
     langData = movieRecApp.recommendation.lang[randomIndex];
   }
 
   // give a shortest possible runtime; add 10% to our selected runtime to give a reasonable option
   let runtimeData = shortestRuntime;
   if (movieRecApp.recommendation.runtime.length > 0) {
-    runtimeData = (movieRecApp.recommendation.runtime.pop() * 1.1);
+    runtimeData = movieRecApp.recommendation.runtime.pop() * 1.1;
   }
-  
+
   // figure out our earliest and latest date values
   let earlyDate = lowestYear;
   let laterDate = curDate;
   if (movieRecApp.recommendation.release.length > 0) {
-
     // choose one of our selected options at random
-    const randomIndex = Math.floor(Math.random() * movieRecApp.recommendation.release.length);
-    const dates = movieRecApp.recommendation.release[randomIndex].split(',');
+    const randomIndex = Math.floor(
+      Math.random() * movieRecApp.recommendation.release.length
+    );
+    const dates = movieRecApp.recommendation.release[randomIndex].split(",");
     earlyDate = dates[1];
     laterDate = dates[0];
-  };
+  }
 
   // initialize url for fetch
-  const url = new URL(`${movieRecApp.url}discover/movie?api_key=${movieRecApp.apiKey}&with_genres=${genreData}&with_original_language=${langData}&with_watch_providers=${servicesData}&watch_region=${curRegion}&with_runtime.lte=${runtimeData}&release_date.gte=${earlyDate}&release_date.lte=${laterDate}`);
+  const url = new URL(
+    `${movieRecApp.url}discover/movie?api_key=${movieRecApp.apiKey}&with_genres=${genreData}&with_original_language=${langData}&with_watch_providers=${servicesData}&watch_region=${curRegion}&with_runtime.lte=${runtimeData}&release_date.gte=${earlyDate}&release_date.lte=${laterDate}`
+  );
 
-  // console.log(url);
+  console.log(url);
 
   // fetch a recommendation and call recommendation page
   fetch(url)
@@ -898,6 +922,7 @@ movieRecApp.getRec = () => {
     })
     .then(function (json) {
       movieRecApp.curRecommendation = json.results;
+      console.log(movieRecApp.curRecommendation);
 
       // with our recommendations, we can now get actor/director data
       movieRecApp.getActorDirectorData();
@@ -906,19 +931,12 @@ movieRecApp.getRec = () => {
 
 // ********** RECOMMENDATION PAGE **************
 movieRecApp.moviePage = () => {
-  console.log('actors: ', movieRecApp.actorList);
-  console.log('directors: ', movieRecApp.directorList);
-  // use the first element of the result array
-  const curIndex = 0;
-
+  // console.log("actors: ", movieRecApp.actorList);
+  // console.log("directors: ", movieRecApp.directorList);
   // grab the DOM page element
-  const movie = document.querySelector('#page');
-  //console.log(movieRecApp.curRecommendation);
-
-  // update it with Title / Tag Line / Poster / Cast / Director / Rating / Overview / Streaming Service (or !IN THEATRES NOW!)
-
+  const movie = document.querySelector("#page");
+  const resultText = document.createElement("h3");
   const movieTitle = document.createElement("h2");
-  movieTitle.innerText = movieRecApp.curRecommendation[curIndex].title;
 
   const movieDiv = document.createElement("div");
   movieDiv.classList.add("movie-info");
@@ -927,26 +945,80 @@ movieRecApp.moviePage = () => {
   const posterContainer = document.createElement("div");
   posterContainer.classList.add("img-container");
   const moviePoster = document.createElement("img");
-  moviePoster.src = `https://image.tmdb.org/t/p/original${movieRecApp.curRecommendation[curIndex].poster_path}`;
-  moviePoster.alt = movieRecApp.curRecommendation[curIndex].title;
-  posterContainer.appendChild(moviePoster);
 
   // create text container for movie info to sit beside poster
   const movieText = document.createElement("div");
   movieText.classList.add("text-container");
   const movieRating = document.createElement("p");
-  movieRating.innerText = movieRecApp.curRecommendation[curIndex].vote_average;
-  const movieOverview = document.createElement("p");
-  movieOverview.innerText = movieRecApp.curRecommendation[curIndex].overview;
 
+  const movieOverview = document.createElement("p");
+
+  const buttonDiv = document.createElement("div");
+
+  // error handling for our reccomendation page
+  if (movieRecApp.curRecommendation.length === 0) {
+    // update it with Title / Tag Line / Poster / Cast / Director / Rating / Overview / Streaming Service (or !IN THEATRES NOW!)
+    resultText.innerText = "Your standards are too damn high. So you get...";
+    movieTitle.innerText = "Cats";
+
+    moviePoster.src = "./assets/cats-poster.jpg";
+    moviePoster.alt = "The poster for the worst movie ever made (Cats).";
+
+    movieRating.innerText = "-99999";
+
+    movieOverview.innerText = "You have no one to blame but yourself.";
+  } else {
+    // use the first element of the result array
+    const curIndex = Math.floor(
+      Math.random() * movieRecApp.curRecommendation.length
+    );
+
+    // update it with Title / Tag Line / Poster / Cast / Director / Rating / Overview / Streaming Service (or !IN THEATRES NOW!)
+    resultText.innerText = "Your perfect movie match is...";
+    movieTitle.innerText = movieRecApp.curRecommendation[curIndex].title;
+
+    moviePoster.src = `https://image.tmdb.org/t/p/original${movieRecApp.curRecommendation[curIndex].poster_path}`;
+    moviePoster.alt = movieRecApp.curRecommendation[curIndex].title;
+
+    movieRating.innerText =
+      movieRecApp.curRecommendation[curIndex].vote_average;
+
+    movieOverview.innerText = movieRecApp.curRecommendation[curIndex].overview;
+
+    // create a buttons for new random movie with user params and start over
+    const newMatch = document.createElement("button");
+    newMatch.innerText = "ANOTHER!";
+    newMatch.value = "repeat";
+    newMatch.classList.add("question-item");
+
+    // append newMatch button to page
+    buttonDiv.appendChild(newMatch);
+  }
+
+  posterContainer.appendChild(moviePoster);
+
+  const restartButton = document.createElement("button");
+  restartButton.innerText = "Restart";
+  restartButton.value = "restart";
+  restartButton.classList.add("question-item");
+
+  // append movie info to the page
   movieText.appendChild(movieRating);
   movieText.appendChild(movieOverview);
 
+  movie.appendChild(resultText);
   movie.appendChild(movieTitle);
   movieDiv.appendChild(posterContainer);
   movieDiv.appendChild(movieText);
 
   movie.appendChild(movieDiv);
+
+  // add the button to the page
+  buttonDiv.appendChild(restartButton);
+  movie.appendChild(buttonDiv);
+
+  // listen for the click
+  movieRecApp.resultListener();
 
   //const movieTag = document.createElement('h3');
   //movieTag.innerText = movieRecApp.curRecommendation.
@@ -967,6 +1039,25 @@ movieRecApp.welcomeListener = () => {
 
     // trigger next page load
     movieRecApp.getGenreData();
+  });
+};
+
+// Listener for recommendation page buttons
+movieRecApp.resultListener = () => {
+  // set up a listener for the click to take us to the next page
+  const movie = document.querySelector("#page");
+  const buttons = document.querySelectorAll("button");
+  buttons.forEach((elem) => {
+    elem.addEventListener("click", (e) => {
+      if (e.target.value == "repeat") {
+        movie.innerHTML = "";
+        movieRecApp.moviePage();
+      } else {
+        console.log(e);
+        movie.innerHTML = "";
+        movieRecApp.genrePage();
+      }
+    });
   });
 };
 
