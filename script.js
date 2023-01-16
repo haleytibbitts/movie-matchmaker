@@ -966,8 +966,11 @@ movieRecApp.getRec = () => {
       // with our recommendations, we can now set our curIndex and get actor/director data
       if (movieRecApp.curRecommendation.length > 0) {
         movieRecApp.curIndex = Math.floor(Math.random() * movieRecApp.curRecommendation.length);
+        movieRecApp.getActorDirectorData();
+      } else {
+        movieRecApp.moviePage();
       }
-      movieRecApp.getActorDirectorData();
+      
     });
 };
 
@@ -993,9 +996,16 @@ movieRecApp.moviePage = () => {
   // create text container for movie info to sit beside poster
   const movieText = document.createElement("div");
   movieText.classList.add("text-container");
+  const movieRatingDiv = document.createElement('div');
+  movieRatingDiv.classList.add('rating');
   const movieRating = document.createElement("p");
 
   const movieOverview = document.createElement("p");
+  const movieStarring = document.createElement('h5');
+  movieStarring.innerText = 'Starring: ';
+  const movieDirBy = document.createElement('h5');
+  movieDirBy.innerText = 'Directed by: ';
+
   const movieCast = document.createElement('p');
   const movieCrew = document.createElement('p');
 
@@ -1006,7 +1016,7 @@ movieRecApp.moviePage = () => {
     // update it with Title / Tag Line / Poster / Cast / Director / Rating / Overview / Streaming Service (or !IN THEATRES NOW!)
     resultText.innerText = "Your standards are too damn high. So you get...";
     movieTitle.innerText = "Cats";
-    movieTag.innerText = "A Musical Journey Into Terribleness"
+    movieTag.innerText = `"A Musical Journey Into Terribleness"`;
 
     moviePoster.src = "./assets/cats-poster.jpg";
     moviePoster.alt = "The poster for the worst movie ever made (Cats).";
@@ -1014,14 +1024,16 @@ movieRecApp.moviePage = () => {
     movieRating.innerText = "-99999";
 
     movieOverview.innerText = "You have no one to blame but yourself.";
-    movieCast.innerText = "Starring: Actors with regrets";
-    movieCrew.innerText = "Directed by: No One In Particular";
+    movieCast.innerText = "Actors with regrets";
+    movieCrew.innerText = "No One In Particular";
   } else {
     const curIndex = movieRecApp.curIndex;
     // update it with Title / Tag Line / Poster / Cast / Director / Rating / Overview / Streaming Service (or !IN THEATRES NOW!)
     resultText.innerText = "Your perfect movie match is...";
     movieTitle.innerText = movieRecApp.curRecommendation[curIndex].title;
-    movieTag.innerText = movieRecApp.curTagLine;
+    if (movieRecApp.curTagLine != "") {
+      movieTag.innerText = `"${movieRecApp.curTagLine}"`;
+    }
 
     moviePoster.src = `https://image.tmdb.org/t/p/original${movieRecApp.curRecommendation[curIndex].poster_path}`;
     moviePoster.alt = movieRecApp.curRecommendation[curIndex].title;
@@ -1033,23 +1045,25 @@ movieRecApp.moviePage = () => {
 
     // Show the full cast if there are 5 or less, otherwise show about half the cast to a max of 10
     let castLength = 0;
-    movieCast.innerText = 'Starring: '
     if (movieRecApp.curCast.length <= 5) {
       castLength = movieRecApp.curCast.length;
     } else if (movieRecApp.curCast.length <= 20) {
       castLength = Math.floor(movieRecApp.curCast.length / 2);
     } else {
-      castLength = 10;
+      castLength = 11;
     }
+    castLength = castLength - 1;
 
     // append the cast into the movieCast.innerText string
     for (let i=0; i<castLength; i++) {
       movieCast.innerText += movieRecApp.curCast[i] + ', ';
     }
     movieCast.innerText += movieRecApp.curCast[castLength];
+    movieStarring.appendChild(movieCast);
 
     // Add the director's name
-    movieCrew.innerText = `Directed by: ${movieRecApp.curCrew[0]}`;
+    movieCrew.innerText = `${movieRecApp.curCrew[0]}`;
+    movieDirBy.appendChild(movieCrew);
 
     // create a buttons for new random movie with user params and start over
     const newMatch = document.createElement("button");
@@ -1061,7 +1075,9 @@ movieRecApp.moviePage = () => {
     buttonDiv.appendChild(newMatch);
   }
 
-  posterContainer.appendChild(moviePoster);
+  if (moviePoster.src != 'https://image.tmdb.org/t/p/originalnull') {
+    posterContainer.appendChild(moviePoster);
+  }
 
   const restartButton = document.createElement("button");
   restartButton.innerText = "Restart";
@@ -1069,10 +1085,16 @@ movieRecApp.moviePage = () => {
   restartButton.classList.add("question-item");
 
   // append movie info to the page
-  movieText.appendChild(movieRating);
+  movieRatingDiv.appendChild(movieRating);
+  movieText.appendChild(movieRatingDiv);
   movieText.appendChild(movieOverview);
-  movieText.appendChild(movieCast);
-  movieText.appendChild(movieCrew);
+  if (movieCast.innerText != "undefined") {
+    console.log(movieCast);
+    movieText.appendChild(movieStarring);
+  }
+  if (movieCrew.innerText != "undefined") { 
+    movieText.appendChild(movieDirBy);
+  }
 
   movie.appendChild(resultText);
   movie.appendChild(movieTitle);
@@ -1120,8 +1142,24 @@ movieRecApp.resultListener = () => {
         movieRecApp.curCrew = [];
         movieRecApp.getRec();
       } else {
-        // console.log(e);
+        // reset EVERYTHING
         movie.innerHTML = "";
+        movieRecApp.curTagLine = '';
+        movieRecApp.curCast = [];
+        movieRecApp.curCrew = [];
+        movieRecApp.actorList = [];
+        movieRecApp.directorList = [];
+        movieRecApp.recommendation = {
+          genre: [],
+          release: [],
+          runtime: [],
+          service: [],
+          lead: [],
+          lang: [],
+          popularity: [],
+          director: [],
+        };
+        movieRecApp.curRecommendation = [];
         movieRecApp.genrePage();
       }
     });

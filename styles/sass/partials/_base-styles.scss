@@ -33,14 +33,17 @@ body {
 }
 
 .img-container {
+  width: 60vw;
+  height: 75vh;
   display: flex;
   justify-content: center;
 
   img {
-    width: 75%;
-    height: 75%;
+    width: 100%;
+    height: auto;
     object-fit: contain;
     object-position: center;
+    padding: 10px;
   }
 }
 
@@ -62,6 +65,7 @@ h1 {
 h2 {
   font-size: 3rem;
   letter-spacing: 1px;
+  margin: 10px 0px;
 }
 
 h3,
@@ -155,7 +159,9 @@ button:focus {
 }
 
 .movie-info {
+  width: 100%;
   display: flex;
+  gap: 20px;
 }
 
 footer {
@@ -166,5 +172,24 @@ footer {
     text-align: center;
     padding: 5px 0;
     margin: 0;
+  }
+}
+
+.tagline {
+  font-style: italic;
+}
+
+.rating {
+  background-color: $tertiary;
+  border-radius: 50%;
+  text-align: center;
+  width: 70px;
+  height: 70px;
+  display: flex;
+
+  p {
+    font-weight: bold;
+    font-size: 1.3rem;
+    margin: auto;
   }
 }
