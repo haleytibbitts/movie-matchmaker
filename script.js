@@ -140,6 +140,10 @@ const curRegion = "CA";
 // Fetch parameters
 movieRecApp.url = "https://api.themoviedb.org/3/";
 movieRecApp.apiKey = "460ad8448635789cb7af9acdaa3d45f2";
+movieRecApp.curIndex = 0;
+movieRecApp.curCast = []; // cast of our current recommendation
+movieRecApp.curCrew = []; // director of our current recommendation
+movieRecApp.curTagLine = '';
 
 // Our "question page" object, which we use to update the HTML for each question
 movieRecApp.page = document.querySelector("#page");
@@ -677,6 +681,13 @@ movieRecApp.getActorDirectorData = () => {
           id: item.cast[0].id,
         };
         movieRecApp.actorList.push(actor);
+
+        // if we're looking at our current recommended movie, add the current cast info to our namespace
+        if (item.id == movieRecApp.curRecommendation[movieRecApp.curIndex].id) {
+          item.cast.forEach((elem) => {
+            movieRecApp.curCast.push(elem.name);
+          });
+        }
       }
 
       // iterate through the crew and add the director to our director list
@@ -689,15 +700,43 @@ movieRecApp.getActorDirectorData = () => {
               id: e.id,
             };
             movieRecApp.directorList.push(director);
+            if (item.id == movieRecApp.curRecommendation[movieRecApp.curIndex].id) {
+              movieRecApp.curCrew.push(e.name);
+            }
           }
         });
       }
     });
 
+    // get the movie tagline
+    movieRecApp.getTagLine();
     // display our movie recommendation
-    movieRecApp.moviePage();
+    // movieRecApp.moviePage();
   });
 };
+
+
+// ********** TAGLINE DATA RETRIEVAL **************
+// Function to retrieve tagline data from our API
+movieRecApp.getTagLine = () => {
+  const url = new URL(`${movieRecApp.url}movie/${movieRecApp.curRecommendation[movieRecApp.curIndex].id}`);
+  url.search = new URLSearchParams({
+    api_key: movieRecApp.apiKey,
+  });
+  
+  // Use the constructed URL to fetch the movie tagline
+  fetch(url)
+    .then((response) => {
+      return response.json();
+    })
+    .then((json) => {
+      // console.log('tagline json: ', json)
+      movieRecApp.curTagLine = json.tagline;
+
+      // finally, display our page
+      movieRecApp.moviePage();
+    });
+}
 
 // create and display a page of possible actors to choose from
 // movieRecApp.actorPage = () => {
@@ -922,9 +961,12 @@ movieRecApp.getRec = () => {
     })
     .then(function (json) {
       movieRecApp.curRecommendation = json.results;
-      console.log(movieRecApp.curRecommendation);
+      // console.log(movieRecApp.curRecommendation);
 
-      // with our recommendations, we can now get actor/director data
+      // with our recommendations, we can now set our curIndex and get actor/director data
+      if (movieRecApp.curRecommendation.length > 0) {
+        movieRecApp.curIndex = Math.floor(Math.random() * movieRecApp.curRecommendation.length);
+      }
       movieRecApp.getActorDirectorData();
     });
 };
@@ -937,6 +979,8 @@ movieRecApp.moviePage = () => {
   const movie = document.querySelector("#page");
   const resultText = document.createElement("h3");
   const movieTitle = document.createElement("h2");
+  const movieTag = document.createElement('h3');
+  movieTag.classList.add('tagline');
 
   const movieDiv = document.createElement("div");
   movieDiv.classList.add("movie-info");
@@ -952,6 +996,8 @@ movieRecApp.moviePage = () => {
   const movieRating = document.createElement("p");
 
   const movieOverview = document.createElement("p");
+  const movieCast = document.createElement('p');
+  const movieCrew = document.createElement('p');
 
   const buttonDiv = document.createElement("div");
 
@@ -960,6 +1006,7 @@ movieRecApp.moviePage = () => {
     // update it with Title / Tag Line / Poster / Cast / Director / Rating / Overview / Streaming Service (or !IN THEATRES NOW!)
     resultText.innerText = "Your standards are too damn high. So you get...";
     movieTitle.innerText = "Cats";
+    movieTag.innerText = "A Musical Journey Into Terribleness"
 
     moviePoster.src = "./assets/cats-poster.jpg";
     moviePoster.alt = "The poster for the worst movie ever made (Cats).";
@@ -967,15 +1014,14 @@ movieRecApp.moviePage = () => {
     movieRating.innerText = "-99999";
 
     movieOverview.innerText = "You have no one to blame but yourself.";
+    movieCast.innerText = "Starring: Actors with regrets";
+    movieCrew.innerText = "Directed by: No One In Particular";
   } else {
-    // use the first element of the result array
-    const curIndex = Math.floor(
-      Math.random() * movieRecApp.curRecommendation.length
-    );
-
+    const curIndex = movieRecApp.curIndex;
     // update it with Title / Tag Line / Poster / Cast / Director / Rating / Overview / Streaming Service (or !IN THEATRES NOW!)
     resultText.innerText = "Your perfect movie match is...";
     movieTitle.innerText = movieRecApp.curRecommendation[curIndex].title;
+    movieTag.innerText = movieRecApp.curTagLine;
 
     moviePoster.src = `https://image.tmdb.org/t/p/original${movieRecApp.curRecommendation[curIndex].poster_path}`;
     moviePoster.alt = movieRecApp.curRecommendation[curIndex].title;
@@ -984,6 +1030,26 @@ movieRecApp.moviePage = () => {
       movieRecApp.curRecommendation[curIndex].vote_average;
 
     movieOverview.innerText = movieRecApp.curRecommendation[curIndex].overview;
+
+    // Show the full cast if there are 5 or less, otherwise show about half the cast to a max of 10
+    let castLength = 0;
+    movieCast.innerText = 'Starring: '
+    if (movieRecApp.curCast.length <= 5) {
+      castLength = movieRecApp.curCast.length;
+    } else if (movieRecApp.curCast.length <= 20) {
+      castLength = Math.floor(movieRecApp.curCast.length / 2);
+    } else {
+      castLength = 10;
+    }
+
+    // append the cast into the movieCast.innerText string
+    for (let i=0; i<castLength; i++) {
+      movieCast.innerText += movieRecApp.curCast[i] + ', ';
+    }
+    movieCast.innerText += movieRecApp.curCast[castLength];
+
+    // Add the director's name
+    movieCrew.innerText = `Directed by: ${movieRecApp.curCrew[0]}`;
 
     // create a buttons for new random movie with user params and start over
     const newMatch = document.createElement("button");
@@ -1005,9 +1071,12 @@ movieRecApp.moviePage = () => {
   // append movie info to the page
   movieText.appendChild(movieRating);
   movieText.appendChild(movieOverview);
+  movieText.appendChild(movieCast);
+  movieText.appendChild(movieCrew);
 
   movie.appendChild(resultText);
   movie.appendChild(movieTitle);
+  movie.appendChild(movieTag);
   movieDiv.appendChild(posterContainer);
   movieDiv.appendChild(movieText);
 
@@ -1020,11 +1089,6 @@ movieRecApp.moviePage = () => {
   // listen for the click
   movieRecApp.resultListener();
 
-  //const movieTag = document.createElement('h3');
-  //movieTag.innerText = movieRecApp.curRecommendation.
-  // const movieCast = document.createElement('p');
-  // movieCast.innerText = movieRecApp.curRecommendation[curIndex].
-  // const movieCrew = document.createElement('p');
   // const movieServices = document.createElement('p');
 };
 
@@ -1051,9 +1115,12 @@ movieRecApp.resultListener = () => {
     elem.addEventListener("click", (e) => {
       if (e.target.value == "repeat") {
         movie.innerHTML = "";
-        movieRecApp.moviePage();
+        movieRecApp.curTagLine = '';
+        movieRecApp.curCast = [];
+        movieRecApp.curCrew = [];
+        movieRecApp.getRec();
       } else {
-        console.log(e);
+        // console.log(e);
         movie.innerHTML = "";
         movieRecApp.genrePage();
       }
