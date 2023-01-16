@@ -1,119 +1,3 @@
-// 460ad8448635789cb7af9acdaa3d45f2
-// https://www.themoviedb.org/settings/api/people
-
-// Fetch genres from API and store within object
-// const genreList = {};
-// genreList.genres = [];
-// fetch(
-//   "https://api.themoviedb.org/3/genre/movie/list?api_key=460ad8448635789cb7af9acdaa3d45f2"
-// )
-//   .then(function (response) {
-//     return response.json();
-//   })
-//   .then(function (json) {
-//     genreList.genres = json.genres;
-//     genreList.listGenres();
-//   });
-
-// Create function that populates the page with genre question and answers.
-// genreList.listGenres = () => {
-//   const questionForm = document.querySelector("form");
-//   const questionLegend = document.createElement("legend");
-//   questionLegend.innerText = "Which genres do you like?";
-//   questionForm.appendChild(questionLegend);
-
-// Loop through genres and populate form with labels and inputs with appropriate attributes for each option.
-// genreList.genres.forEach((item) => {
-//   // console.log(item);
-//   const inputLabel = document.createElement("label");
-//   const inputElement = document.createElement("input");
-//   inputElement.type = "checkbox";
-//   inputElement.id = item.name;
-//   inputElement.value = item.name;
-//   inputLabel.htmlFor = item.name;
-//   inputLabel.innerText = item.name;
-//   questionForm.appendChild(inputLabel);
-//   questionForm.appendChild(inputElement);
-// });
-
-// Create event listener that stores movie suggestions in an object on submit.
-// const submitButton = document.querySelector("button");
-// submitButton.addEventListener("submit", function (e) {
-//   e.preventDefault();
-//   const movieList = {};
-//   movieList.results = [];
-//   console.log("clicked");
-//   questionForm.children.forEach((genre) => {});
-
-// MOVIES :)
-// const getMovie = () => {
-//   const url = new URL("https://api.themoviedb.org/3/discover/movie");
-//   url.search = new URLSearchParams({
-//     api_key: "460ad8448635789cb7af9acdaa3d45f2",
-//     with_original_language: "en",
-//   });
-//   fetch(url)
-//     .then(function (response) {
-//       return response.json();
-//     })
-//     .then(function (json) {
-//       // console.log(json);
-//       console.log(json.results);
-//     });
-// };
-
-// getMovie();
-
-//     movieList.displayMovies = () => {
-//       const page = document.querySelector("body");
-
-//       movieList.results.forEach((item) => {
-//         const newPara = document.createElement("p");
-//         newPara.innerHTML = `<h3>${item.original_title}:</h3> ${item.overview}`;
-//         page.appendChild(newPara);
-//       });
-//     };
-//   });
-// };
-
-// make namespace object for our app (movieRecApp)
-
-// initialize API
-
-// create an array of movie recs
-// create questions to get user input
-// eg fav genre, language, etc.
-// put data from user selections into array
-// fetch data from API based on user inputs/selections
-// write a function that evaluates user selections...
-// write function that displays a recommendation on the page
-// ask user for input on whether or not they want to keep the given rec or ask for a new one.
-
-// STRETCH: add recs to watchlist
-
-// movieRecApp {
-//      recommendation {
-//          genre
-//          spoken language
-//          release date
-//          lead actor
-//          supporting actor
-//          director
-//          runtime
-//          critical rating
-//          how to watch (ie. netflix, prime, hulu, somewhere for free, etc.)
-//      }
-//      list of genres (array)
-//      list of spoken languages (array)
-//      semi-random list of actors (primary & supporting)
-//      semi-random list of directors
-//      curOptions (array)
-// }
-
-//////////////////////////////////////////////////////////////////////////
-// PSEUDO CODE!
-//////////////////////////////////////////////////////////////////////////
-
 // 1. make namespace object (movieRecApp)
 const movieRecApp = {};
 
@@ -143,7 +27,7 @@ movieRecApp.apiKey = "460ad8448635789cb7af9acdaa3d45f2";
 movieRecApp.curIndex = 0;
 movieRecApp.curCast = []; // cast of our current recommendation
 movieRecApp.curCrew = []; // director of our current recommendation
-movieRecApp.curTagLine = '';
+movieRecApp.curTagLine = "";
 
 // Our "question page" object, which we use to update the HTML for each question
 movieRecApp.page = document.querySelector("#page");
@@ -196,9 +80,9 @@ movieRecApp.genrePage = () => {
 
   // create our question elements, starting with a legend/question
   const questionLegend = document.createElement("legend");
-  questionLegend.innerText = "What Genre(s) would you like to be matched with?";
+  questionLegend.innerText =
+    "If your life were a movie, what genre(s) would it be?";
   questionForm.appendChild(questionLegend);
-  // console.log(questionForm);
 
   // Create div to hold all options
   const optionsDiv = document.createElement("div");
@@ -279,19 +163,19 @@ movieRecApp.releasePage = () => {
     if (i === 1) {
       questionElem.id = questionElem.name = questionLabel.htmlFor = curYear;
       questionElem.value = [curDate, curYear];
-      questionLabel.innerText = "Brand New";
+      questionLabel.innerText = "Shiny & New";
     } else if (i === 2) {
       questionElem.id = questionElem.name = questionLabel.htmlFor = recentYear;
       questionElem.value = [curYear, recentYear];
-      questionLabel.innerText = "Recent-ish";
+      questionLabel.innerText = "Young & Foolish";
     } else if (i === 3) {
       questionElem.id = questionElem.name = questionLabel.htmlFor = oldYear;
       questionElem.value = [recentYear, oldYear];
-      questionLabel.innerText = "Older, but not Ancient";
+      questionLabel.innerText = "Well-Aged (Like a Fine Wine)";
     } else if (i === 4) {
       questionElem.id = questionElem.name = questionLabel.htmlFor = classicYear;
       questionElem.value = [oldYear, classicYear];
-      questionLabel.innerText = "Classic Film (Ancient)";
+      questionLabel.innerText = "Classic Film (Old Soul)";
     }
   }
 
@@ -323,8 +207,7 @@ movieRecApp.langPage = () => {
 
   // create our question elements, starting with a legend/question
   const questionLegend = document.createElement("legend");
-  questionLegend.innerText =
-    "Which language would you like your film to be in?";
+  questionLegend.innerText = "What is your love language?";
   questionForm.appendChild(questionLegend);
 
   // Create div to hold all options
@@ -332,7 +215,7 @@ movieRecApp.langPage = () => {
   optionsDiv.classList.add("options");
   questionForm.appendChild(optionsDiv);
 
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= 9; i++) {
     const questionDiv = document.createElement("div");
     questionDiv.classList.add("question-item");
     const questionElem = document.createElement("input");
@@ -402,20 +285,13 @@ movieRecApp.langPage = () => {
         questionLabel.htmlFor =
           "hi";
       questionLabel.innerText = "Hindi";
-    } else if (i === 9) {
+    } else {
       questionElem.id =
         questionElem.name =
         questionElem.value =
         questionLabel.htmlFor =
           "it";
       questionLabel.innerText = "Italian";
-    } else {
-      questionElem.id =
-        questionElem.name =
-        questionElem.value =
-        questionLabel.htmlFor =
-          "random";
-      questionLabel.innerText = "Suprise Me!";
     }
   }
   // add our question fieldset to the page
@@ -439,60 +315,6 @@ movieRecApp.langPage = () => {
   movieRecApp.questionListener("lang");
 };
 
-// ********** POPULARITY QUESTION PAGE **************
-movieRecApp.popularityPage = () => {
-  // create a form to put all the elements inside
-  const questionForm = document.createElement("fieldset");
-
-  // create our question elements, starting with a legend/question
-  const questionLegend = document.createElement("legend");
-  questionLegend.innerText =
-    "Is popularity important to you when choosing your ideal match?";
-  questionForm.appendChild(questionLegend);
-
-  // Create div to hold all options
-  const optionsDiv = document.createElement("div");
-  optionsDiv.classList.add("options");
-  questionForm.appendChild(optionsDiv);
-
-  for (let i = 1; i <= 2; i++) {
-    const questionDiv = document.createElement("div");
-    questionDiv.classList.add("question-item");
-    const questionElem = document.createElement("input");
-    const questionLabel = document.createElement("label");
-    questionElem.type = "checkbox";
-
-    // put each checkbox item & label into our question div
-    questionDiv.appendChild(questionElem);
-    questionDiv.appendChild(questionLabel);
-
-    // put this div into our fieldset object
-    optionsDiv.appendChild(questionDiv);
-
-    if (i === 1) {
-      questionElem.id = questionElem.name = questionLabel.htmlFor = "popular";
-      questionLabel.innerText = "Yes! I want what everyone else wants!";
-      questionLabel.value = "2000";
-    } else {
-      questionElem.id = questionElem.name = questionLabel.htmlFor = "unpopular";
-      questionLabel.innerText = "Nope! Give me an unsung hero!";
-      questionLabel.value = "";
-    }
-  }
-  // add our question fieldset to the page
-  movieRecApp.page.appendChild(questionForm);
-
-  // create a button to submit
-  const qButton = document.createElement("button");
-  qButton.innerText = "Next Question";
-
-  // add the button to the page
-  movieRecApp.page.appendChild(qButton);
-
-  // listen for the click
-  movieRecApp.questionListener("popularity");
-};
-
 // ********** RUNTIME QUESTION PAGE **************
 movieRecApp.runtimePage = () => {
   // create a form
@@ -500,7 +322,7 @@ movieRecApp.runtimePage = () => {
 
   // create our question elements, starting with a legend/question
   const questionLegend = document.createElement("legend");
-  questionLegend.innerText = "How long a movie do you want to watch?";
+  questionLegend.innerText = "How long is your ideal first date?";
   questionForm.appendChild(questionLegend);
 
   // Create div to hold all options
@@ -527,28 +349,28 @@ movieRecApp.runtimePage = () => {
         questionElem.name =
         questionLabel.innerText =
         questionLabel.htmlFor =
-          "Like, an hour";
+          "Like, an hour (Coffee & a Chat)";
       questionElem.value = 60;
     } else if (i === 2) {
       questionElem.id =
         questionElem.name =
         questionLabel.innerText =
         questionLabel.htmlFor =
-          "60 to 90 minutes";
+          "60 to 90 minutes (Stroll on the Beach)";
       questionElem.value = 90;
     } else if (i === 3) {
       questionElem.id =
         questionElem.name =
         questionLabel.innerText =
         questionLabel.htmlFor =
-          "90 to 120 minutes";
+          "90 to 120 minutes (Dinner & a Movie)";
       questionElem.value = 120;
     } else {
       questionElem.id =
         questionElem.name =
         questionLabel.innerText =
         questionLabel.htmlFor =
-          "Let's spend the night together!";
+          "Let's spend the night together! (Self-Explanatory)";
       questionElem.value = 360;
     }
   }
@@ -601,10 +423,8 @@ movieRecApp.servicePage = (servicesList) => {
 
   // create our question elements, starting with a legend/question
   const questionLegend = document.createElement("legend");
-  questionLegend.innerText =
-    "What service provider would you like to use for your date?";
+  questionLegend.innerText = "_____ & Chill?";
   questionForm.appendChild(questionLegend);
-  // console.log(questionForm);
 
   // Create div to hold all options
   const optionsDiv = document.createElement("div");
@@ -662,8 +482,6 @@ movieRecApp.getActorDirectorData = () => {
     URLs.push(url);
   });
 
-  // console.log(URLs);
-
   // force ourselves to wait for a response from all the API calls(!)
   Promise.all(
     URLs.map(async (url) => {
@@ -671,11 +489,9 @@ movieRecApp.getActorDirectorData = () => {
       return response.json();
     })
   ).then((json) => {
-    // console.log(json);
     json.forEach((item) => {
       // if we have any cast, add the first one to our actor list
       if (item.cast.length > 0) {
-        // console.log(item.cast);
         const actor = {
           name: item.cast[0].name,
           id: item.cast[0].id,
@@ -692,7 +508,6 @@ movieRecApp.getActorDirectorData = () => {
 
       // iterate through the crew and add the director to our director list
       if (item.crew.length > 0) {
-        // console.log(item.crew);
         item.crew.forEach((e) => {
           if (e.job == "Director") {
             const director = {
@@ -700,7 +515,9 @@ movieRecApp.getActorDirectorData = () => {
               id: e.id,
             };
             movieRecApp.directorList.push(director);
-            if (item.id == movieRecApp.curRecommendation[movieRecApp.curIndex].id) {
+            if (
+              item.id == movieRecApp.curRecommendation[movieRecApp.curIndex].id
+            ) {
               movieRecApp.curCrew.push(e.name);
             }
           }
@@ -715,143 +532,30 @@ movieRecApp.getActorDirectorData = () => {
   });
 };
 
-
 // ********** TAGLINE DATA RETRIEVAL **************
 // Function to retrieve tagline data from our API
 movieRecApp.getTagLine = () => {
-  const url = new URL(`${movieRecApp.url}movie/${movieRecApp.curRecommendation[movieRecApp.curIndex].id}`);
+  const url = new URL(
+    `${movieRecApp.url}movie/${
+      movieRecApp.curRecommendation[movieRecApp.curIndex].id
+    }`
+  );
   url.search = new URLSearchParams({
     api_key: movieRecApp.apiKey,
   });
-  
+
   // Use the constructed URL to fetch the movie tagline
   fetch(url)
     .then((response) => {
       return response.json();
     })
     .then((json) => {
-      // console.log('tagline json: ', json)
       movieRecApp.curTagLine = json.tagline;
 
       // finally, display our page
       movieRecApp.moviePage();
     });
-}
-
-// create and display a page of possible actors to choose from
-// movieRecApp.actorPage = () => {
-//   // create a form to put all the elements inside
-//   const questionForm = document.createElement("fieldset");
-
-//   // create our question elements, starting with a legend/question
-//   const questionLegend = document.createElement("legend");
-//   questionLegend.innerText = "What actor(s) would you like to watch?";
-//   questionForm.appendChild(questionLegend);
-
-//   // create each checkbox item
-//   movieRecApp.actorList.forEach((item) => {
-//     // create the div
-//     const questionDiv = document.createElement("div");
-//     questionDiv.classList.add("question-item");
-
-//     // create the checkboxes
-//     const questionElem = document.createElement("input");
-//     questionElem.type = "checkbox";
-//     questionElem.id = questionElem.name = item.name;
-//     questionElem.value = item.id;
-//     const questionLabel = document.createElement("label");
-//     questionLabel.innerText = questionLabel.for = item.name;
-
-//     // put each checkbox item & label into our question div
-//     questionDiv.appendChild(questionLabel);
-//     questionDiv.appendChild(questionElem);
-
-//     // put this div into our fieldset object
-//     questionForm.appendChild(questionDiv);
-//   });
-//   // add our question fieldset to the page
-//   movieRecApp.page.appendChild(questionForm);
-
-//   // create a button to submit
-//   const qButton = document.createElement("button");
-//   qButton.innerText = "Next Question";
-
-//   // add the button to the page
-//   movieRecApp.page.appendChild(qButton);
-
-//   // listen for the click
-//   movieRecApp.questionListener("lead");
-// };
-
-// // ********** DIRECTOR QUESTION PAGE **************
-// // Function to retrieve director data from our API
-// movieRecApp.getDirectorData = () => {
-//   const url = new URL(`${movieRecApp.url}person/popular`);
-
-//   // We need to iterate over a bunch of pages to ensure we get enough directors
-//   for (let i = 1; i <= 75; i++) {
-//     url.search = new URLSearchParams({
-//       api_key: movieRecApp.apiKey,
-//       page: i,
-//     });
-//     fetch(url)
-//       .then((response) => {
-//         return response.json();
-//       })
-//       .then((jsonResponse) => {
-//         jsonResponse.results.forEach((e) => {
-//           if (e.known_for_department === "Directing") {
-//             movieRecApp.directorList.push(e);
-//           }
-//         });
-//       });
-//   }
-// };
-
-// // create and display a page of possible directors to choose from
-// movieRecApp.directorPage = () => {
-//   // create a form to put all the elements inside
-//   const questionForm = document.createElement("fieldset");
-
-//   // create our question elements, starting with a legend/question
-//   const questionLegend = document.createElement("legend");
-//   questionLegend.innerText = "What director(s) would you like to watch?";
-//   questionForm.appendChild(questionLegend);
-
-//   // create each checkbox item
-//   movieRecApp.directorList.forEach((item) => {
-//     // create the div
-//     const questionDiv = document.createElement("div");
-//     questionDiv.classList.add("question-item");
-
-//     // create the checkboxes
-//     const questionElem = document.createElement("input");
-//     questionElem.type = "checkbox";
-//     questionElem.id = questionElem.name = item.name;
-//     questionElem.value = item.id;
-//     const questionLabel = document.createElement("label");
-//     questionLabel.innerText = questionLabel.for = item.name;
-
-//     // put each checkbox item & label into our question div
-//     questionDiv.appendChild(questionLabel);
-//     questionDiv.appendChild(questionElem);
-
-//     // put this div into our fieldset object
-//     questionForm.appendChild(questionDiv);
-//   });
-//   // add our question fieldset to the page
-//   movieRecApp.page.appendChild(questionForm);
-
-//   // create a button to submit
-//   const qButton = document.createElement("button");
-//   qButton.innerText = "Find My Match!";
-
-//   // add the button to the page
-//   movieRecApp.page.appendChild(qButton);
-
-//   // listen for the click
-//   movieRecApp.questionListener("director");
-// };
+};
 
 // ********** UPDATE OUR PAGE **************
 // Listen for the click on "Next Question", update our recommendation data, and then call the next question
@@ -875,14 +579,12 @@ movieRecApp.questionListener = (curPage) => {
               movieRecApp.recommendation.release.push(item.value);
             } else if (curPage == "lang") {
               movieRecApp.recommendation.lang.push(item.value);
-              // } else if (curPage == "popularity") {
-              //   movieRecApp.recommendation.popularity.push(item.value);
             } else if (curPage == "runtime") {
               movieRecApp.recommendation.runtime.push(item.value);
             } else if (curPage == "service") {
               movieRecApp.recommendation.service.push(item.value);
             } else {
-              // console.log(movieRecApp.recommendation);
+              alert("Page Does Not Exist");
             }
           }
         }
@@ -952,8 +654,6 @@ movieRecApp.getRec = () => {
     `${movieRecApp.url}discover/movie?api_key=${movieRecApp.apiKey}&with_genres=${genreData}&with_original_language=${langData}&with_watch_providers=${servicesData}&watch_region=${curRegion}&with_runtime.lte=${runtimeData}&release_date.gte=${earlyDate}&release_date.lte=${laterDate}`
   );
 
-  console.log(url);
-
   // fetch a recommendation and call recommendation page
   fetch(url)
     .then(function (response) {
@@ -961,29 +661,27 @@ movieRecApp.getRec = () => {
     })
     .then(function (json) {
       movieRecApp.curRecommendation = json.results;
-      // console.log(movieRecApp.curRecommendation);
 
       // with our recommendations, we can now set our curIndex and get actor/director data
       if (movieRecApp.curRecommendation.length > 0) {
-        movieRecApp.curIndex = Math.floor(Math.random() * movieRecApp.curRecommendation.length);
+        movieRecApp.curIndex = Math.floor(
+          Math.random() * movieRecApp.curRecommendation.length
+        );
         movieRecApp.getActorDirectorData();
       } else {
         movieRecApp.moviePage();
       }
-      
     });
 };
 
 // ********** RECOMMENDATION PAGE **************
 movieRecApp.moviePage = () => {
-  // console.log("actors: ", movieRecApp.actorList);
-  // console.log("directors: ", movieRecApp.directorList);
   // grab the DOM page element
   const movie = document.querySelector("#page");
   const resultText = document.createElement("h3");
   const movieTitle = document.createElement("h2");
-  const movieTag = document.createElement('h3');
-  movieTag.classList.add('tagline');
+  const movieTag = document.createElement("h3");
+  movieTag.classList.add("tagline");
 
   const movieDiv = document.createElement("div");
   movieDiv.classList.add("movie-info");
@@ -996,18 +694,18 @@ movieRecApp.moviePage = () => {
   // create text container for movie info to sit beside poster
   const movieText = document.createElement("div");
   movieText.classList.add("text-container");
-  const movieRatingDiv = document.createElement('div');
-  movieRatingDiv.classList.add('rating');
+  const movieRatingDiv = document.createElement("div");
+  movieRatingDiv.classList.add("rating");
   const movieRating = document.createElement("p");
 
   const movieOverview = document.createElement("p");
-  const movieStarring = document.createElement('h5');
-  movieStarring.innerText = 'Starring: ';
-  const movieDirBy = document.createElement('h5');
-  movieDirBy.innerText = 'Directed by: ';
+  const movieStarring = document.createElement("h5");
+  movieStarring.innerText = "Starring: ";
+  const movieDirBy = document.createElement("h5");
+  movieDirBy.innerText = "Directed by: ";
 
-  const movieCast = document.createElement('p');
-  const movieCrew = document.createElement('p');
+  const movieCast = document.createElement("p");
+  const movieCrew = document.createElement("p");
 
   const buttonDiv = document.createElement("div");
 
@@ -1015,7 +713,7 @@ movieRecApp.moviePage = () => {
   if (movieRecApp.curRecommendation.length === 0) {
     // update it with Title / Tag Line / Poster / Cast / Director / Rating / Overview / Streaming Service (or !IN THEATRES NOW!)
     resultText.innerText = "Your standards are too damn high. So you get...";
-    movieTitle.innerText = "Cats";
+    movieTitle.innerText = "Cats (2019)";
     movieTag.innerText = `"A Musical Journey Into Terribleness"`;
 
     moviePoster.src = "./assets/cats-poster.jpg";
@@ -1025,12 +723,17 @@ movieRecApp.moviePage = () => {
 
     movieOverview.innerText = "You have no one to blame but yourself.";
     movieCast.innerText = "Actors with regrets";
-    movieCrew.innerText = "No One In Particular";
+    movieCrew.innerText = "God's Negligence";
   } else {
     const curIndex = movieRecApp.curIndex;
+
+    const titleText = movieRecApp.curRecommendation[curIndex].title;
+    const releaseYear = movieRecApp.curRecommendation[
+      curIndex
+    ].release_date.substr(0, 4);
     // update it with Title / Tag Line / Poster / Cast / Director / Rating / Overview / Streaming Service (or !IN THEATRES NOW!)
     resultText.innerText = "Your perfect movie match is...";
-    movieTitle.innerText = movieRecApp.curRecommendation[curIndex].title;
+    movieTitle.innerText = `${titleText} (${releaseYear})`;
     if (movieRecApp.curTagLine != "") {
       movieTag.innerText = `"${movieRecApp.curTagLine}"`;
     }
@@ -1055,15 +758,13 @@ movieRecApp.moviePage = () => {
     castLength = castLength - 1;
 
     // append the cast into the movieCast.innerText string
-    for (let i=0; i<castLength; i++) {
-      movieCast.innerText += movieRecApp.curCast[i] + ', ';
+    for (let i = 0; i < castLength; i++) {
+      movieCast.innerText += movieRecApp.curCast[i] + ", ";
     }
     movieCast.innerText += movieRecApp.curCast[castLength];
-    movieStarring.appendChild(movieCast);
 
     // Add the director's name
     movieCrew.innerText = `${movieRecApp.curCrew[0]}`;
-    movieDirBy.appendChild(movieCrew);
 
     // create a buttons for new random movie with user params and start over
     const newMatch = document.createElement("button");
@@ -1075,8 +776,9 @@ movieRecApp.moviePage = () => {
     buttonDiv.appendChild(newMatch);
   }
 
-  if (moviePoster.src != 'https://image.tmdb.org/t/p/originalnull') {
+  if (moviePoster.src != "https://image.tmdb.org/t/p/originalnull") {
     posterContainer.appendChild(moviePoster);
+    movieDiv.appendChild(posterContainer);
   }
 
   const restartButton = document.createElement("button");
@@ -1089,17 +791,17 @@ movieRecApp.moviePage = () => {
   movieText.appendChild(movieRatingDiv);
   movieText.appendChild(movieOverview);
   if (movieCast.innerText != "undefined") {
-    console.log(movieCast);
+    movieStarring.appendChild(movieCast);
     movieText.appendChild(movieStarring);
   }
-  if (movieCrew.innerText != "undefined") { 
+  if (movieCrew.innerText != "undefined") {
+    movieDirBy.appendChild(movieCrew);
     movieText.appendChild(movieDirBy);
   }
 
   movie.appendChild(resultText);
   movie.appendChild(movieTitle);
   movie.appendChild(movieTag);
-  movieDiv.appendChild(posterContainer);
   movieDiv.appendChild(movieText);
 
   movie.appendChild(movieDiv);
@@ -1137,14 +839,14 @@ movieRecApp.resultListener = () => {
     elem.addEventListener("click", (e) => {
       if (e.target.value == "repeat") {
         movie.innerHTML = "";
-        movieRecApp.curTagLine = '';
+        movieRecApp.curTagLine = "";
         movieRecApp.curCast = [];
         movieRecApp.curCrew = [];
         movieRecApp.getRec();
       } else {
         // reset EVERYTHING
         movie.innerHTML = "";
-        movieRecApp.curTagLine = '';
+        movieRecApp.curTagLine = "";
         movieRecApp.curCast = [];
         movieRecApp.curCrew = [];
         movieRecApp.actorList = [];
@@ -1172,55 +874,4 @@ movieRecApp.init = () => {
   // movieRecApp.getDirectorData();
 };
 
-// 2. initialize API
-// 3. fetch requests for data we want from API
-//      3.1 genres
-//      3.2 dozen random lead actor names
-//      3.3 dozen random supporting actor names
-//      3.4 dozen random director names
-// 4. create init function
-//      4.1 call welcome page (big ol' button: "Get Me My Recommendation, Robot Butler!")
-//      4.2 call genre question page
-//          4.2.1 display options
-//              4.2.1.1 looks at curOptions
-//              4.2.1.2 creates HTML for each option, iteratively
-//              4.2.1.3 displays HTML (append to certain area of website)
-//              4.2.1.4 add button response options
-//              4.2.1.5 wait for response
-//          4.2.2 capture response
-//          4.2.3 store that in movieRecApp->recommendation object
-//      4.3 call release date question page (Now Playing, Recent Release, Classic Film, etc)
-//          4.3.1 display options
-//          4.3.2 capture response
-//          4.3.3 store that in movieRecApp->recommendation object
-//      4.4 call spoken language question page
-//          4.4.1 display options
-//          4.4.2 capture response
-//          4.4.3 store that in movieRecApp->recommendation object
-//      4.5 call critical rating page
-//          4.5.1 display options
-//          4.5.2 capture response
-//          4.5.3 store that in movieRecApp->recommendation object
-//      4.6 call runtime page
-//          4.6.1 display options
-//          4.6.2 capture response
-//          4.6.3 store that in movieRecApp->recommendation object
-//      4.7 call how-to-watch page
-//          4.7.1 display options
-//          4.7.2 capture response
-//          4.7.3 store that in movieRecApp->recommendation object
-//      4.8 call lead actor page
-//          4.8.1 display options
-//          4.8.2 capture response
-//          4.8.3 store that in movieRecApp->recommendation object
-//      4.9 call director page
-//          4.9.1 display options
-//          4.9.2 capture response
-//          4.9.3 store that in movieRecApp->recommendation object
-//      4.10 call supporting actor page
-//          4.10.1 display options
-//          4.10.2 capture response
-//          4.10.3 store that in movieRecApp->recommendation object
-// 5. Fetch from Movie Recommendations API with user input data from movieRecApp->recommendation
-// 6. Present: Title / Tag Line / Poster / Cast / Director / Rating / Overview / Streaming Service (or !IN THEATRES NOW!)
 movieRecApp.init();
