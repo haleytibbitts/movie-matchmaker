@@ -119,6 +119,7 @@ movieRecApp.genrePage = () => {
   const skipButton = document.createElement("button");
   skipButton.innerText = "Skip";
   const buttonDiv = document.createElement("div");
+  buttonDiv.classList.add("button-div");
   qButton.classList.add("question-item");
   skipButton.classList.add("question-item");
 
@@ -188,6 +189,7 @@ movieRecApp.releasePage = () => {
   const skipButton = document.createElement("button");
   skipButton.innerText = "Skip";
   const buttonDiv = document.createElement("div");
+  buttonDiv.classList.add("button-div");
   qButton.classList.add("question-item");
   skipButton.classList.add("question-item");
 
@@ -303,6 +305,7 @@ movieRecApp.langPage = () => {
   const skipButton = document.createElement("button");
   skipButton.innerText = "Skip";
   const buttonDiv = document.createElement("div");
+  buttonDiv.classList.add("button-div");
   qButton.classList.add("question-item");
   skipButton.classList.add("question-item");
 
@@ -370,7 +373,7 @@ movieRecApp.runtimePage = () => {
         questionElem.name =
         questionLabel.innerText =
         questionLabel.htmlFor =
-          "Let's spend the night together! (Self-Explanatory)";
+          "Let's spend the night together!";
       questionElem.value = 360;
     }
   }
@@ -383,6 +386,7 @@ movieRecApp.runtimePage = () => {
   const skipButton = document.createElement("button");
   skipButton.innerText = "Skip";
   const buttonDiv = document.createElement("div");
+  buttonDiv.classList.add("button-div");
   qButton.classList.add("question-item");
   skipButton.classList.add("question-item");
 
@@ -456,8 +460,9 @@ movieRecApp.servicePage = (servicesList) => {
 
   // create a button to submit
   const qButton = document.createElement("button");
-  qButton.innerText = "MATCH ME ❤";
+  qButton.innerHTML = `MATCH ME <i class="fa-solid fa-heart"></i>`;
   const buttonDiv = document.createElement("div");
+  buttonDiv.classList.add("button-div");
   qButton.classList.add("question-item");
 
   // add the button to the page
@@ -592,6 +597,9 @@ movieRecApp.questionListener = (curPage) => {
 
       // clear out the current question
       const page = document.querySelector("#page");
+      page.classList.remove("fade-in");
+      void page.offsetWidth;
+      page.classList.add("fade-in");
       page.innerHTML = "";
 
       // call the next question page
@@ -600,8 +608,6 @@ movieRecApp.questionListener = (curPage) => {
       } else if (curPage == "release") {
         movieRecApp.langPage();
       } else if (curPage == "lang") {
-        //   movieRecApp.popularityPage();
-        // } else if (curPage == "popularity") {
         movieRecApp.runtimePage();
       } else if (curPage == "runtime") {
         movieRecApp.getServices();
@@ -680,6 +686,7 @@ movieRecApp.moviePage = () => {
   const movie = document.querySelector("#page");
   const resultText = document.createElement("h3");
   const movieTitle = document.createElement("h2");
+  movieTitle.classList.add("movie-title");
   const movieTag = document.createElement("h3");
   movieTag.classList.add("tagline");
 
@@ -708,6 +715,7 @@ movieRecApp.moviePage = () => {
   const movieCrew = document.createElement("p");
 
   const buttonDiv = document.createElement("div");
+  buttonDiv.classList.add("button-div");
 
   // error handling for our reccomendation page
   if (movieRecApp.curRecommendation.length === 0) {
@@ -719,7 +727,7 @@ movieRecApp.moviePage = () => {
     moviePoster.src = "./assets/cats-poster.jpg";
     moviePoster.alt = "The poster for the worst movie ever made (Cats).";
 
-    movieRating.innerText = "-99999";
+    movieRating.innerText = "-99999999";
 
     movieOverview.innerText = "You have no one to blame but yourself.";
     movieCast.innerText = "Actors with regrets";
@@ -823,6 +831,9 @@ movieRecApp.welcomeListener = () => {
   elem.addEventListener("click", (e) => {
     // grab welcome page section & remove it
     const welcomePage = document.querySelector("#page");
+    welcomePage.classList.remove("fade-in");
+    void welcomePage.offsetWidth;
+    welcomePage.classList.add("fade-in");
     welcomePage.innerHTML = "";
 
     // trigger next page load
@@ -835,9 +846,14 @@ movieRecApp.resultListener = () => {
   // set up a listener for the click to take us to the next page
   const movie = document.querySelector("#page");
   const buttons = document.querySelectorAll("button");
+
   buttons.forEach((elem) => {
     elem.addEventListener("click", (e) => {
       if (e.target.value == "repeat") {
+        movie.classList.remove("fade-in");
+        void movie.offsetWidth;
+        movie.classList.add("fade-in");
+
         movie.innerHTML = "";
         movieRecApp.curTagLine = "";
         movieRecApp.curCast = [];
@@ -845,6 +861,10 @@ movieRecApp.resultListener = () => {
         movieRecApp.getRec();
       } else {
         // reset EVERYTHING
+        movie.classList.remove("fade-in");
+        void movie.offsetWidth;
+        movie.classList.add("fade-in");
+
         movie.innerHTML = "";
         movieRecApp.curTagLine = "";
         movieRecApp.curCast = [];

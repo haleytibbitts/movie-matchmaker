@@ -1,0 +1,99 @@
+@use "./variables" as *;
+
+@media (max-width: 1050px) {
+  body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    background-image: url(../../../assets/cupid-left.svg),
+      url(../../../assets/cupid-right.svg);
+    background-size: 75%, 80%;
+    background-repeat: no-repeat;
+    background-position: -30vw -10vh, 60vw 55vh;
+  }
+
+  .wrapper {
+    padding: 40px;
+  }
+
+  .movie-info {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .img-container {
+    width: 30vw;
+    height: auto;
+  }
+
+  .text-container {
+    flex-basis: 69%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rating {
+    align-self: center;
+  }
+}
+
+@media (max-width: 550px) {
+  body {
+    background-size: 100%, 100%;
+    background-position: -41vw -7vh, 50vw 60vh;
+  }
+
+  .wrapper {
+    width: 90%;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 2.3rem;
+  }
+
+  h3 {
+    margin: 10px 0;
+  }
+
+  h5 {
+    margin: 5px 0;
+  }
+
+  .button-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .options {
+    align-items: center;
+    margin: 20px 0;
+  }
+
+  fieldset {
+    padding: 0;
+  }
+
+  .movie-title {
+    text-align: center;
+  }
+
+  .movie-info {
+    margin: 15px 0 0 0;
+  }
+
+  .img-container {
+    width: 60vw;
+  }
+}
